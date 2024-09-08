@@ -17,15 +17,20 @@ void openInputFile(ifstream& inFile) {      //File opening operation
     }
 }
 
+void parseAndPush(const string& input) {  //Read the file, create a stack, and push the items to it
+    Stack stack(input.size());
+    for ( size_t i = 0; i < input.size(); i++ ) {
+            char c = input[i];
+            stack.push(c);
+        }
+}
+
 bool readLines(ifstream& inFile) {          //Add function to read file
     string input;
 
     while ( getline(inFile, input) ) {      //Accept input
         cout<<input<<endl;
-        for ( size_t i = 0; i < input.size(); i++ ) {
-            char c = input[i];
-            cout<<c<<endl;
-        }
+        parseAndPush(input);
     }
 }
 class Stack {                               //Add Stack class to handle creation of stack and handling stack functions
@@ -35,13 +40,13 @@ class Stack {                               //Add Stack class to handle creation
         int* stackArray;
         
     public:
-        Stack(int size) {                       //Constructor
+        Stack(int size) {                   //Constructor
             capacity = size;
             stackArray = new int[capacity];
             top = -1;
         }
 
-        void push(int item) {                   //Push an item onto the stack
+        void push(int item) {               //Push an item onto the stack
             if (top < capacity - 1) {
                 stackArray[++top] = item;
             } else {
@@ -50,7 +55,7 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        int pop() {                             //Pop an item from the stack
+        int pop() {                         //Pop an item from the stack
             if (top >= 0) {
                 return stackArray[top--];
             } else {
@@ -59,7 +64,7 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        int peek() {                            //View the top item of the stack
+        int peek() {                        //View the top item of the stack
             if (top >= 0) {
                 return stackArray[top];
             } else {
@@ -68,11 +73,11 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        bool isEmpty() {                        //Return bool regarding the emptiness of the stack.
+        bool isEmpty() {                    //Return bool regarding the emptiness of the stack.
             return top == -1;
         }
 
-        ~Stack() {                              //Destructor
+        ~Stack() {                          //Destructor
             delete[] stackArray;
         }
 };
