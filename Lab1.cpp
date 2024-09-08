@@ -22,6 +22,10 @@ bool readLines(ifstream& inFile) {
 
     while ( getline(inFile, input) ) {
         cout<<input<<endl;
+        for ( size_t i = 0; i < input.size(); i++ ) {
+            char c = input[i];
+            cout<<c<<endl;
+        }
     }
 }
 
