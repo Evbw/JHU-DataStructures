@@ -17,11 +17,20 @@ void openInputFile(ifstream& inFile) {
     }
 }
 
+bool readLines(ifstream& inFile) {
+    string input;
+
+    while ( getline(inFile, input) ) {
+        cout<<input<<endl;
+    }
+}
+
 int main() {
     ifstream inFile;
     openInputFile(inFile);
 
     if(inFile) {
+        readLines(inFile);
         cout<<"Success opening the file!"<<endl;
     }
     else {
