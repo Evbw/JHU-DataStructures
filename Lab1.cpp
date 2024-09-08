@@ -76,11 +76,11 @@ void preToPost(Stack& stack) {              //Translator function to get the equ
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
     Stack stack(input.size());
     for ( size_t i = 0; i < input.size(); i++ ) {
-        char c = input[i];
+        string c = string(1, input[i]);
         stack.push(c);
     }
     while (!stack.isEmpty()) {
-        cout<<stack.pop()<<endl;
+        cout<<stack.pop();
     }
 }
 
