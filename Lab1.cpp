@@ -83,6 +83,7 @@ bool isOperator(const string& c) {         //Return bool regarding the emptiness
 
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
     Stack stack(input.size());
+
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
        
@@ -96,6 +97,17 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
             if (!isOperator(top1) && !isOperator(top2) && isOperator(op)) {
                 string postfix = top2 + top1 + op;
                 stack.push(postfix);
+
+                while (stack.size() >= 3) {
+                    string top1 = stack.pop();
+                    string top2 = stack.pop();
+                    string op = stack.pop();
+
+                    if (!isOperator(top1) && !isOperator(top2) && isOperator(op)) {
+                    string postfix = top2 + top1 + op;
+                    stack.push(postfix);
+                    }
+                }
             } else {
                 stack.push(op);
                 stack.push(top2);
@@ -103,6 +115,11 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
             }
         }
     }
+
+    while (!stack.isEmpty()) {
+        cout<<stack.pop();
+    }
+    cout<<endl;
 }
 
 bool readLines(ifstream& inFile) {          //Add function to read file
