@@ -82,22 +82,18 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
         stack.push(c);
-        if (isOperator(string(1, c))) {
-            stack.push(string(1, c));
+        if (isOperator(c)) {
+            stack.push(c);
         }
         else {
             // Push operands onto the stack
-            stack.push(string(1, c));
-            if (!isOperator(stack.peek()) && !isOperator(string(1, c))) {
+            stack.push(c);
+            if (!isOperator(stack.peek()) && !isOperator(c)) {
                 cout<<"if translate section "<<endl;
-                translate(stack);  // Translate prefix to postfix
+                preToPost(stack);  // Translate prefix to postfix
             }
         }
     }
-}
-
-bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
-    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
 }
 
 bool readLines(ifstream& inFile) {          //Add function to read file
