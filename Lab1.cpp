@@ -46,6 +46,7 @@ class Stack {                               //Add Stack class to handle creation
                 stackArray[++top] = item;
             } else {
                 cout << "Stack overflow, cannot push." << endl;
+                return -1;
             }
         }
 
