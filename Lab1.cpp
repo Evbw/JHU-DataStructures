@@ -56,7 +56,20 @@ class Stack {                               //Add Stack class to handle creation
                 cout << "Stack underflow, cannot pop." << endl;
                 return -1;
             }
-        }   
+        }
+
+        int peek() {                            //View the top item of the stack
+            if (top >= 0) {
+                return stackArray[top];
+            } else {
+                cout << "Stack is empty, cannot peek." << endl;
+                return -1;
+            }
+        }
+
+        bool isEmpty() {                        //Return bool regarding the emptiness of the stack.
+            return top == -1;
+        }
 
         ~Stack() {                              //Destructor
             delete[] stackArray;
