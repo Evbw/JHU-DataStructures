@@ -29,21 +29,38 @@ bool readLines(ifstream& inFile) {          //Add function to read file
     }
 }
 class Stack {                               //Add Stack class to handle creation of stack and handling stack functions
-private:
-    int top;
-    int capacity;
-    int* stackArray;
-    
-public:
-    Stack(int size) {                       //Constructor
-        capacity = size;
-        stackArray = new int[capacity];
-        top = -1;
-    }
+    private:
+        int top;
+        int capacity;
+        int* stackArray;
+        
+    public:
+        Stack(int size) {                       //Constructor
+            capacity = size;
+            stackArray = new int[capacity];
+            top = -1;
+        }
 
-    ~Stack() {                              //Destructor
-        delete[] stackArray;
-    }
+        void push(int item) {                   //Push an item onto the stack
+            if (top < capacity - 1) {
+                stackArray[++top] = item;
+            } else {
+                cout << "Stack overflow, cannot push." << endl;
+            }
+        }
+
+        int pop() {                             //Pop an item from the stack
+            if (top >= 0) {
+                return stackArray[top--];
+            } else {
+                cout << "Stack underflow, cannot pop." << endl;
+                return -1;
+            }
+        }   
+
+        ~Stack() {                              //Destructor
+            delete[] stackArray;
+        }
 };
 
 int main() {                                //Main driver function. Accept input and call handler function
