@@ -26,11 +26,11 @@ class Stack {                               //Add Stack class to handle creation
     public:
         Stack(int size) {                   //Constructor
             capacity = size;
-            stackArray = new int[capacity];
+            stackArray = new string[capacity];
             top = -1;
         }
 
-        void push(int item) {               //Push an item onto the stack
+        void push(string item) {               //Push an item onto the stack
             if (top < capacity - 1) {
                 stackArray[++top] = item;
             } else {
@@ -68,12 +68,16 @@ class Stack {                               //Add Stack class to handle creation
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
     Stack stack(input.size());
     for ( size_t i = 0; i < input.size(); i++ ) {
-            char c = input[i];
-            stack.push(c);
-        }
+        char c = input[i];
+        stack.push(c);
+    }
     while (!stack.isEmpty()) {
         cout<<stack.pop()<<endl;
     }
+}
+
+bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
+    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
 }
 
 bool readLines(ifstream& inFile) {          //Add function to read file
