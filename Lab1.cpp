@@ -30,7 +30,7 @@ class Stack {                               //Add Stack class to handle creation
             top = -1;
         }
 
-        void push(string item) {               //Push an item onto the stack
+        void push(string item) {            //Push an item onto the stack
             if (top < capacity - 1) {
                 stackArray[++top] = item;
             } else {
@@ -38,7 +38,11 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        string pop() {                         //Pop an item from the stack
+        int size() {                        //Return the size of the stack. It indexed at zero, so we find the top and add one
+            return top + 1;
+        }
+
+        string pop() {                      //Pop an item from the stack
             if (top >= 0) {
                 return stackArray[top--];
             } else {
@@ -81,16 +85,21 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
     Stack stack(input.size());
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
+       
         stack.push(c);
-        if (isOperator(c)) {
-            stack.push(c);
-        }
-        else {
-            // Push operands onto the stack
-            stack.push(c);
-            if (!isOperator(stack.peek()) && !isOperator(c)) {
-                cout<<"if translate section "<<endl;
-                preToPost(stack);  // Translate prefix to postfix
+
+        if (stack.size() >= 3) {
+            string top1 = stack.pop();
+            string top2 = stack.pop();
+            string op = stack.pop();
+
+            if (!isOperator(top1) && !isOperator(top2) && isOperator(op)) {
+                string postfix = top2 + top1 + op;
+                stack.push(postfix);
+            } else {
+                stack.push(op);
+                stack.push(top2);
+                stack.push(top1);
             }
         }
     }
