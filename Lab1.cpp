@@ -21,7 +21,7 @@ class Stack {                               //Add Stack class to handle creation
     private:
         int top;
         int capacity;
-        int* stackArray;
+        string* stackArray;
         
     public:
         Stack(int size) {                   //Constructor
@@ -38,21 +38,21 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        char pop() {                         //Pop an item from the stack
+        string pop() {                         //Pop an item from the stack
             if (top >= 0) {
                 return stackArray[top--];
             } else {
                 cout << "Stack underflow, cannot pop." << endl;
-                return -1;
+                return "";
             }
         }
 
-        char peek() {                        //View the top item of the stack
+        string peek() {                        //View the top item of the stack
             if (top >= 0) {
                 return stackArray[top];
             } else {
                 cout << "Stack is empty, cannot peek." << endl;
-                return -1;
+                return "";
             }
         }
 
@@ -80,7 +80,6 @@ bool readLines(ifstream& inFile) {          //Add function to read file
     string input;
 
     while ( getline(inFile, input) ) {      //Accept input
-        cout<<input<<endl;
         parseAndPush(input);
     }
 }
