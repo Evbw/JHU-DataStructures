@@ -3,12 +3,12 @@
 #include <fstream>
 using namespace std;
 
-void openInputFile(ifstream& inFile) {
+void openInputFile(ifstream& inFile) {      //File opening operation
     string filename;
-    cout<<"Enter the filename: "<<endl;
-    getline(cin,filename);
-    inFile.open(filename);
-    while (!inFile) {
+    cout<<"Enter the filename: "<<endl;     //Request name of input file
+    getline(cin,filename);                  //Get input
+    inFile.open(filename);                  //Open file!
+    while (!inFile) {                       //If the file fails to open, enter a loop until a valid file name is chosen
         cout<<"File failed to open."<<endl;
         cout<<"Enter the filename: "<<endl;
         getline(cin,filename);
@@ -17,10 +17,10 @@ void openInputFile(ifstream& inFile) {
     }
 }
 
-bool readLines(ifstream& inFile) {
+bool readLines(ifstream& inFile) {          //Add function to read file
     string input;
 
-    while ( getline(inFile, input) ) {
+    while ( getline(inFile, input) ) {      //Accept input
         cout<<input<<endl;
         for ( size_t i = 0; i < input.size(); i++ ) {
             char c = input[i];
@@ -28,8 +28,25 @@ bool readLines(ifstream& inFile) {
         }
     }
 }
+class Stack {                               //Add Stack class to handle creation of stack and handling stack functions
+private:
+    int top;
+    int capacity;
+    int* stackArray;
+    
+public:
+    Stack(int size) {                       //Constructor
+        capacity = size;
+        stackArray = new int[capacity];
+        top = -1;
+    }
 
-int main() {
+    ~Stack() {                              //Destructor
+        delete[] stackArray;
+    }
+};
+
+int main() {                                //Main driver function. Accept input and call handler function
     ifstream inFile;
     openInputFile(inFile);
 
