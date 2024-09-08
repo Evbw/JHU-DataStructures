@@ -17,22 +17,6 @@ void openInputFile(ifstream& inFile) {      //File opening operation
     }
 }
 
-void parseAndPush(const string& input) {  //Read the file, create a stack, and push the items to it
-    Stack stack(input.size());
-    for ( size_t i = 0; i < input.size(); i++ ) {
-            char c = input[i];
-            stack.push(c);
-        }
-}
-
-bool readLines(ifstream& inFile) {          //Add function to read file
-    string input;
-
-    while ( getline(inFile, input) ) {      //Accept input
-        cout<<input<<endl;
-        parseAndPush(input);
-    }
-}
 class Stack {                               //Add Stack class to handle creation of stack and handling stack functions
     private:
         int top;
@@ -51,11 +35,10 @@ class Stack {                               //Add Stack class to handle creation
                 stackArray[++top] = item;
             } else {
                 cout << "Stack overflow, cannot push." << endl;
-                return -1;
             }
         }
 
-        int pop() {                         //Pop an item from the stack
+        char pop() {                         //Pop an item from the stack
             if (top >= 0) {
                 return stackArray[top--];
             } else {
@@ -64,7 +47,7 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        int peek() {                        //View the top item of the stack
+        char peek() {                        //View the top item of the stack
             if (top >= 0) {
                 return stackArray[top];
             } else {
@@ -81,6 +64,26 @@ class Stack {                               //Add Stack class to handle creation
             delete[] stackArray;
         }
 };
+
+void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
+    Stack stack(input.size());
+    for ( size_t i = 0; i < input.size(); i++ ) {
+            char c = input[i];
+            stack.push(c);
+        }
+    while (!stack.isEmpty()) {
+        cout<<stack.pop()<<endl;
+    }
+}
+
+bool readLines(ifstream& inFile) {          //Add function to read file
+    string input;
+
+    while ( getline(inFile, input) ) {      //Accept input
+        cout<<input<<endl;
+        parseAndPush(input);
+    }
+}
 
 int main() {                                //Main driver function. Accept input and call handler function
     ifstream inFile;
