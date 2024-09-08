@@ -65,6 +65,14 @@ class Stack {                               //Add Stack class to handle creation
         }
 };
 
+void preToPost(Stack& stack) {              //Translator function to get the equations from prefix to postfix form
+    string operand1 = stack.pop();
+    string operand2 = stack.pop();
+    string op = stack.pop();
+    string postfix = operand2 + operand1 + op;
+    stack.push(postfix);
+}
+
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
     Stack stack(input.size());
     for ( size_t i = 0; i < input.size(); i++ ) {
