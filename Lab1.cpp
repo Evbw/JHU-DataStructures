@@ -73,14 +73,26 @@ void preToPost(Stack& stack) {              //Translator function to get the equ
     stack.push(postfix);
 }
 
+bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
+    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
+}
+
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
     Stack stack(input.size());
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
         stack.push(c);
-    }
-    while (!stack.isEmpty()) {
-        cout<<stack.pop();
+        if (isOperator(string(1, c))) {
+            stack.push(string(1, c));
+        }
+        else {
+            // Push operands onto the stack
+            stack.push(string(1, c));
+            if (!isOperator(stack.peek()) && !isOperator(string(1, c))) {
+                cout<<"if translate section "<<endl;
+                translate(stack);  // Translate prefix to postfix
+            }
+        }
     }
 }
 
