@@ -88,7 +88,7 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
         string c = string(1, input[i]);
        
         stack.push(c);
-        cout<<stack.size()<<endl;
+        
         if (stack.size() >= 3) {
             string top1 = stack.pop();
             string top2 = stack.pop();
