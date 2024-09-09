@@ -4,7 +4,6 @@
 using namespace std;
 
 void openInputFile(ifstream& inFile, string& filename) {        //File opening operation
-    string filename;
     cout<<"Enter the filename: "<<endl;                         //Request name of input file
     getline(cin,filename);                                      //Get input
     inFile.open(filename);                                      //Open file!
@@ -31,10 +30,10 @@ class Stack {                                                   //Add Stack clas
         }
 
         void push(string item) {                                //Push an item onto the stack
-            if (top < capacity - 1) {
+            if (top < capacity -1) {
                 stackArray[++top] = item;
             } else {
-                cout << "Stack overflow, cannot push." << endl;
+                cout<<"Stack overflow, cannot push."<<endl;
             }
         }
 
@@ -46,7 +45,7 @@ class Stack {                                                   //Add Stack clas
             if (top >= 0) {
                 return stackArray[top--];
             } else {
-                cout << "Stack underflow, cannot pop." << endl;
+                cout<<"Stack underflow, cannot pop."<<endl;
                 return "";
             }
         }
@@ -55,7 +54,7 @@ class Stack {                                                   //Add Stack clas
             if (top >= 0) {
                 return stackArray[top];
             } else {
-                cout << "Stack is empty, cannot peek." << endl;
+                cout<<"Stack is empty, cannot peek."<<endl;
                 return "";
             }
         }
@@ -84,7 +83,7 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
         return false;
     }
 
-    for ( size_t i = 0; i < input.size(); i++ ) {               //The next step is to iterate through all of the characters to confirm they are prefix
+    for (int i = 0; i < input.size(); i++) {                    //The next step is to iterate through all of the characters to confirm they are prefix
         string c = string(1, input[i]);                         //No spaces, no parentheses, and anything from A-Z or 0-9 is not allowed
         if (!isOperator(c) && !isOperand(c)) {
             cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
@@ -94,39 +93,40 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
     return true;
 }
 
-void parseAndPush(const string& input) {        //Create a stack and push the items read from the line to it
+string parseAndPush(const string& input) {                      //Create a stack and push the items read from the line to it
     Stack stack(input.size());
+    string result;
 
-    for ( size_t i = 0; i < input.size(); i++ ) {   //Iterate through the stack
-        string c = string(1, input[i]);             //Extract the character
+    for (int i = 0; i < input.size(); i++) {                    //Iterate through the stack
+        string c = string(1, input[i]);                         //Extract the character
        
-        stack.push(c);                              //And push it to the stack
+        stack.push(c);                                          //And push it to the stack
 
-        if (stack.size() >= 3) {                    //Once we get to a size of 3 (or more), we check the previous three items
-            string top1 = stack.pop();              //And store them in temp variables for comparison
+        if (stack.size() >= 3) {                                //Once we get to a size of 3 (or more), we check the previous three items
+            string top1 = stack.pop();                          //And store them in temp variables for comparison
             string top2 = stack.pop();
             string op = stack.pop();
 
             if (isOperand(top1) && isOperand(top2) && isOperator(op)) { //If they match the conditionals, then they're candidates for being converted
-                string postfix = top2 + top1 + op;  //Create a new string based on the combination
-                stack.push(postfix);                //And push it to the stack
+                string postfix = top2 + top1 + op;              //Create a new string based on the combination
+                stack.push(postfix);                            //And push it to the stack
 
-                while (stack.size() >= 3) {         //I will need to check previous additions to the stack, however, and compare them
-                    string top1 = stack.pop();      //The previous operands+operator combo will now be treated as a single string
-                    string top2 = stack.pop();      //So if the previous addition is also a string and the following variable is an
-                    string op = stack.pop();        //operator, then we can add that to the stack, too
+                while (stack.size() >= 3) {                     //I will need to check previous additions to the stack, however, and compare them
+                    string top1 = stack.pop();                  //The previous operands+operator combo will now be treated as a single string
+                    string top2 = stack.pop();                  //So if the previous addition is also a string and the following variable is an
+                    string op = stack.pop();                    //operator, then we can add that to the stack, too
 
                     if (isOperand(top1) && isOperand(top2) && isOperator(op)) {
                         string postfix = top2 + top1 + op;
                         stack.push(postfix);
-                    } else {                        //Otherwise we add them all back to the stack in order and exit the while loop
+                    } else {                                    //Otherwise we add them all back to the stack in order and exit the while loop
                         stack.push(op);
                         stack.push(top2);
                         stack.push(top1);
                         break;
                     }
                 }
-            } else {                                //Putting the items we popped back in order to check the next character
+            } else {                                            //Putting the items we popped back in order to check the next character
                 stack.push(op);
                 stack.push(top2);
                 stack.push(top1);
@@ -134,17 +134,17 @@ void parseAndPush(const string& input) {        //Create a stack and push the it
         }
     }
 
-    while (!stack.isEmpty()) {                      //And then we pop everything off of the stack for display
+    while (!stack.isEmpty()) {                                  //And then we pop everything off of the stack for display
         cout<<stack.pop();
     }
-    cout<<endl;
+    return result;
 }
 
-/* void parseAndPush(const string& input) {         //I haven't tested this, but this is an effort to recursively add items to the stack
+/* void parseAndPush(const string& input) {                     //I haven't tested this, but this is an effort to recursively add items to the stack
     Stack stack(input.size());
     int index = 0;  
 
-    if (index >= input.size()) {                    //Base case
+    if (index >= input.size()) {                                //Base case
         return;
     }
 
@@ -169,16 +169,30 @@ void parseAndPush(const string& input) {        //Create a stack and push the it
     cout<<endl;
 }*/
 
-void readLines(ifstream& inFile) {              //This will read individual lines from the file until eof
+void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
+    outFile<<input<<" = "<<result<<endl;
+}
+
+void readLines(ifstream& inFile, ofstream& outFile) {                          //This will read individual lines from the file until eof
     string input;
     int lineNumber = 1;
 
-    while (getline(inFile, input)) {            //Set loop for each additional line
-        if (validityChecker(input, lineNumber)) {   //Call validityChecker function to confirm the lines are in the proper format
-            parseAndPush(input);                //Call parseAndPush function to begin process of identifying output
+    while (getline(inFile, input)) {                        //Set loop for each additional line
+        if (validityChecker(input, lineNumber)) {           //Call validityChecker function to confirm the lines are in the proper format
+            string result = parseAndPush(input);            //Call parseAndPush function to begin process of identifying output and set it to the result
+            cout<<input<<" = "<<result<<endl;               //Display input and output to terminal
+            writeOutput(outFile, input, result);            //Write output file
         }
-        lineNumber++;                           //Increment line number for validityChecker
+        lineNumber++;                                       //Increment line number for validityChecker
     }
+}
+
+string createOutputFilename(const string& filename) {       //Create a new filename with " output" appended
+    int dotPos = filename.find_last_of('.');             //Find the position of the dot
+    if (dotPos != string::npos) {
+        return filename.substr(0, dotPos) + " output" + filename.substr(dotPos); //And presuming it exists, append " output to it"
+    }
+    return filename + " output";                            //If the filename doesn't have a type associated, then just output will be appended
 }
 
 void menu() {                                   //This function welcomes the user and requests input
@@ -194,7 +208,7 @@ void menu() {                                   //This function welcomes the use
         if(inFile) {
             string outputFilename = createOutputFilename(filename);  //Create output filename
             outFile.open(outputFilename, ios::app);                  //Open output file for output to be appended
-            readLines(inFile);
+            readLines(inFile, outFile);
             outFile.close();
         }
         else {
