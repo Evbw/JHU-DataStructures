@@ -181,16 +181,6 @@ void readLines(ifstream& inFile) {              //This will read individual line
     }
 }
 
-string convertToLowercase(const string& str) {  //Found this function on GeeksforGeeks                           
-    string result = "";                         //https://www.geeksforgeeks.org/how-to-convert-std-string-to-lower-case-in-cpp/
-  
-    for (char ch : str) { 
-        result += tolower(ch);                  //Convert each character to lowercase using tolower 
-    }
-
-    return result; 
-} 
-
 void menu() {                                   //This function welcomes the user and requests input
     ifstream inFile;
     string choice = "y";
@@ -213,15 +203,13 @@ void menu() {                                   //This function welcomes the use
         cout<<"Would you like to process another file? (Y/Yes/N/No):"<<endl;
         getline(cin, choice);
 
-        convertToLowercase(choice);
-
-        if (choice == "n" || choice == "no") {
+        if (choice == "n" || choice == "no" || choice == "N" || choice == "No") {
             cout<<endl;
             cout<<"Exiting program. Come back now, ya hear?"<<endl;
             break;
         }
         
-    } while (choice == "y" || choice == "yes");
+    } while (choice == "y" || choice == "yes" || choice == "Y" || choice == "Yes");
 }
 
 int main() {                                    //Main driver function. Calls handler function
