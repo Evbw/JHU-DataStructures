@@ -77,6 +77,14 @@ void preToPost(Stack& stack) {              //Translator function to get the equ
     stack.push(postfix);
 }
 
+bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
+    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
+}
+
+bool isOperand(const string& c) {
+    return c[0] >= 'A' && c[0] <= 'Z';
+}
+
 void validityChecker(const string& input, int lineNumber) {
 
     if (!isOperator(string(1, input[0]))) {
@@ -86,19 +94,12 @@ void validityChecker(const string& input, int lineNumber) {
 
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
+        if (!isOperator(c) && !isOperand(c)) {
             cout<<"Invalid format for line #"<<lineNumber<< endl;
             return;
+        }
     }
 
-    if (!isOperator(string(1, input[0]))) {
-        cout << "Invalid format for line #" << lineNumber << endl;
-        return;
-    }
-
-}
-
-bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
-    return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
 }
 
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
@@ -149,9 +150,12 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
 
 bool readLines(ifstream& inFile) {          //Add function to read file
     string input;
+    int lineNumber = 1;
 
     while ( getline(inFile, input) ) {      //Accept input
+        validityChecker(input, lineNumber);
         parseAndPush(input);
+        lineNumber++;
     }
     return true;
 }
@@ -162,7 +166,6 @@ int main() {                                //Main driver function. Accept input
 
     if(inFile) {
         readLines(inFile);
-        cout<<"Success opening the file!"<<endl;
     }
     else {
         cout<<"Try again"<<endl;
