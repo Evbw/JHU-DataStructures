@@ -77,6 +77,26 @@ void preToPost(Stack& stack) {              //Translator function to get the equ
     stack.push(postfix);
 }
 
+void validityChecker(const string& input, int lineNumber) {
+
+    if (!isOperator(string(1, input[0]))) {
+        cout << "Invalid format for line #" << lineNumber << endl;
+        return;
+    }
+
+    for ( size_t i = 0; i < input.size(); i++ ) {
+        string c = string(1, input[i]);
+            cout<<"Invalid format for line #"<<lineNumber<< endl;
+            return;
+    }
+
+    if (!isOperator(string(1, input[0]))) {
+        cout << "Invalid format for line #" << lineNumber << endl;
+        return;
+    }
+
+}
+
 bool isOperator(const string& c) {         //Return bool regarding the emptiness of the stack.
     return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
 }
@@ -88,7 +108,7 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
         string c = string(1, input[i]);
        
         stack.push(c);
-        
+
         if (stack.size() >= 3) {
             string top1 = stack.pop();
             string top2 = stack.pop();
