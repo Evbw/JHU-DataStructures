@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 
-void openInputFile(ifstream& inFile) {                          //File opening operation
+void openInputFile(ifstream& inFile, string& filename) {        //File opening operation
     string filename;
     cout<<"Enter the filename: "<<endl;                         //Request name of input file
     getline(cin,filename);                                      //Get input
@@ -117,8 +117,8 @@ void parseAndPush(const string& input) {        //Create a stack and push the it
                     string op = stack.pop();        //operator, then we can add that to the stack, too
 
                     if (isOperand(top1) && isOperand(top2) && isOperator(op)) {
-                    string postfix = top2 + top1 + op;
-                    stack.push(postfix);
+                        string postfix = top2 + top1 + op;
+                        stack.push(postfix);
                     } else {                        //Otherwise we add them all back to the stack in order and exit the while loop
                         stack.push(op);
                         stack.push(top2);
@@ -183,15 +183,19 @@ void readLines(ifstream& inFile) {              //This will read individual line
 
 void menu() {                                   //This function welcomes the user and requests input
     ifstream inFile;
-    string choice = "y";
+    ofstream outFile;
+    string filename, choice = "y";
 
     cout<<"Welcome! This program converts prefix equations into postfix form. "<<endl;
 
     do {                                        //do while loop to allow multiple inputs from the user
-        openInputFile(inFile);
+        openInputFile(inFile, filename);
 
         if(inFile) {
+            string outputFilename = createOutputFilename(filename);  //Create output filename
+            outFile.open(outputFilename, ios::app);                  //Open output file for output to be appended
             readLines(inFile);
+            outFile.close();
         }
         else {
             cout<<"Error reading file. ";
