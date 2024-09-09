@@ -82,24 +82,24 @@ bool isOperator(const string& c) {         //Return bool regarding the emptiness
 }
 
 bool isOperand(const string& c) {
-    return c[0] >= 'A' && c[0] <= 'Z';
+    return (c[0] >= 'A' && c[0] <= 'Z') || (c[0] >= '0' && c[0] <= '9');
 }
 
-void validityChecker(const string& input, int lineNumber) {
+bool validityChecker(const string& input, int lineNumber) {
 
     if (!isOperator(string(1, input[0]))) {
-        cout << "Invalid format for line #" << lineNumber << endl;
-        return;
+        cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form."<<endl;
+        return false;
     }
 
     for ( size_t i = 0; i < input.size(); i++ ) {
         string c = string(1, input[i]);
         if (!isOperator(c) && !isOperand(c)) {
-            cout<<"Invalid format for line #"<<lineNumber<< endl;
-            return;
+            cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form."<<endl;
+            return false;
         }
     }
-
+    return true;
 }
 
 void parseAndPush(const string& input) {    //Read the file, create a stack, and push the items to it
@@ -153,8 +153,9 @@ bool readLines(ifstream& inFile) {          //Add function to read file
     int lineNumber = 1;
 
     while ( getline(inFile, input) ) {      //Accept input
-        validityChecker(input, lineNumber);
-        parseAndPush(input);
+        if (validityChecker(input, lineNumber)) {
+            parseAndPush(input);
+        }
         lineNumber++;
     }
     return true;
