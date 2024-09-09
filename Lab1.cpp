@@ -3,12 +3,12 @@
 #include <fstream>
 using namespace std;
 
-void openInputFile(ifstream& inFile) {      //File opening operation
+void openInputFile(ifstream& inFile) {                          //File opening operation
     string filename;
-    cout<<"Enter the filename: "<<endl;     //Request name of input file
-    getline(cin,filename);                  //Get input
-    inFile.open(filename);                  //Open file!
-    while (!inFile) {                       //If the file fails to open, enter a loop until a valid file name is chosen
+    cout<<"Enter the filename: "<<endl;                         //Request name of input file
+    getline(cin,filename);                                      //Get input
+    inFile.open(filename);                                      //Open file!
+    while (!inFile) {                                           //If the file fails to open, enter a loop until a valid file name is chosen
         cout<<"File failed to open. Please ensure the file exists and you have the correct permissions."<<endl;
         cout<<"Enter the filename: "<<endl;
         inFile.clear();
@@ -17,20 +17,20 @@ void openInputFile(ifstream& inFile) {      //File opening operation
     }
 }
 
-class Stack {                               //Add Stack class to handle creation of stack and handling stack functions
+class Stack {                                                   //Add Stack class to handle creation of stack and handling stack functions
     private:
         int top;
         int capacity;
         string* stackArray;
         
     public:
-        Stack(int size) {                   //Constructor
+        Stack(int size) {                                       //Constructor
             capacity = size;
             stackArray = new string[capacity];
             top = -1;
         }
 
-        void push(string item) {            //Push an item onto the stack
+        void push(string item) {                                //Push an item onto the stack
             if (top < capacity - 1) {
                 stackArray[++top] = item;
             } else {
@@ -38,11 +38,11 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        int size() {                        //Return the size of the stack. It indexed at zero, so we find the top and add one
+        int size() {                                            //Return the size of the stack. It indexed at zero, so we find the top and add one
             return top + 1;
         }
 
-        string pop() {                      //Pop an item from the stack
+        string pop() {                                          //Pop an item from the stack
             if (top >= 0) {
                 return stackArray[top--];
             } else {
@@ -51,7 +51,7 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        string peek() {                        //View the top item of the stack
+        string peek() {                                         //View the top item of the stack
             if (top >= 0) {
                 return stackArray[top];
             } else {
@@ -60,11 +60,11 @@ class Stack {                               //Add Stack class to handle creation
             }
         }
 
-        bool isEmpty() {                    //Return bool regarding the emptiness of the stack.
+        bool isEmpty() {                                        //Return bool regarding the emptiness of the stack.
             return top == -1;
         }
 
-        ~Stack() {                          //Destructor
+        ~Stack() {                                              //Destructor
             delete[] stackArray;
         }
 };
