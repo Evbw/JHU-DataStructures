@@ -88,7 +88,7 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
         string c = string(1, input[i]);
        
         stack.push(c);
-
+        cout<<stack.size()<<endl;
         if (stack.size() >= 3) {
             string top1 = stack.pop();
             string top2 = stack.pop();
@@ -106,6 +106,11 @@ void parseAndPush(const string& input) {    //Read the file, create a stack, and
                     if (!isOperator(top1) && !isOperator(top2) && isOperator(op)) {
                     string postfix = top2 + top1 + op;
                     stack.push(postfix);
+                    } else {
+                        stack.push(op);
+                        stack.push(top2);
+                        stack.push(top1);
+                        break;
                     }
                 }
             } else {
@@ -128,6 +133,7 @@ bool readLines(ifstream& inFile) {          //Add function to read file
     while ( getline(inFile, input) ) {      //Accept input
         parseAndPush(input);
     }
+    return true;
 }
 
 int main() {                                //Main driver function. Accept input and call handler function
