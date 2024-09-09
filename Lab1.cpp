@@ -9,10 +9,10 @@ void openInputFile(ifstream& inFile) {      //File opening operation
     getline(cin,filename);                  //Get input
     inFile.open(filename);                  //Open file!
     while (!inFile) {                       //If the file fails to open, enter a loop until a valid file name is chosen
-        cout<<"File failed to open."<<endl;
+        cout<<"File failed to open. Please ensure the file exists and you have the correct permissions."<<endl;
         cout<<"Enter the filename: "<<endl;
-        getline(cin,filename);
         inFile.clear();
+        getline(cin,filename);
         inFile.open(filename);
     }
 }
@@ -161,16 +161,52 @@ bool readLines(ifstream& inFile) {          //Add function to read file
     return true;
 }
 
-int main() {                                //Main driver function. Accept input and call handler function
-    ifstream inFile;
-    openInputFile(inFile);
+string convertToLowercase(const string& str) 
+{ 
+    string result = ""; 
+  
+    for (char ch : str) { 
+        //Convert each character to lowercase using tolower 
+        result += tolower(ch); 
+    } 
+  
+    return result; 
+} 
 
-    if(inFile) {
-        readLines(inFile);
-    }
-    else {
-        cout<<"Try again"<<endl;
-    }
-    inFile.clear();
+void menu() {
+    ifstream inFile;
+    string choice = "y";
+
+    cout<<"Welcome! This program converts prefix equations into postfix form. "<<endl;
+
+    do {
+        openInputFile(inFile);
+
+        if(inFile) {
+            readLines(inFile);
+        }
+        else {
+            cout<<"Error reading file. ";
+        }
+
+        inFile.close();
+        inFile.clear();
+
+        cout<<"Would you like to process another file? (Y/Yes/N/No): "<<endl;
+        getline(cin, choice);
+
+        convertToLowercase(choice);
+
+        if (choice == "n" || choice == "no") {
+            cout << "Exiting program." << endl;
+            break;
+        }
+        
+    } while (choice == "y" || choice == "yes");
+    
+}
+
+int main() {                                //Main driver function. Accept input and call handler function
+    menu();
     return 0;
 }
