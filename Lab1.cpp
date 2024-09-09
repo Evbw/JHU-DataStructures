@@ -200,16 +200,12 @@ void menu() {                                   //This function welcomes the use
         inFile.close();                         //Close and clear the file for multiple inputs.
         inFile.clear();
 
-        cout<<"Would you like to process another file? (Y/Yes/N/No):"<<endl;
+        cout<<"Would you like to process another file? (Y/Yes for yes. Anything else for No):"<<endl;
         getline(cin, choice);
-
-        if (choice == "n" || choice == "no" || choice == "N" || choice == "No") {
-            cout<<endl;
-            cout<<"Exiting program. Come back now, ya hear?"<<endl;
-            break;
-        }
         
     } while (choice == "y" || choice == "yes" || choice == "Y" || choice == "Yes");
+    cout<<endl;
+    cout<<"Exiting program. Come back now, ya hear?"<<endl;
 }
 
 int main() {                                    //Main driver function. Calls handler function
