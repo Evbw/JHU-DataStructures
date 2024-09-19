@@ -5,13 +5,13 @@ using namespace std;
 
 void openInputFile(ifstream& inFile, string& filename) {        //File opening operation
     cout<<"Enter the filename: "<<endl;                         //Request name of input file
-    getline(cin,filename);                                      //Get input
+    getline(cin, filename);                                      //Get input
     inFile.open(filename);                                      //Open file!
     while (!inFile) {                                           //If the file fails to open, enter a loop until a valid file name is chosen
         cout<<"File failed to open. Please ensure the file exists and you have the correct permissions."<<endl;
         cout<<"Enter the filename: "<<endl;
         inFile.clear();
-        getline(cin,filename);
+        getline(cin, filename);
         inFile.open(filename);
     }
 }
@@ -135,7 +135,7 @@ string parseAndPush(const string& input) {                      //Create a stack
     }
 
     while (!stack.isEmpty()) {                                  //And then we pop everything off of the stack for display
-        cout<<stack.pop();
+        result += stack.pop();
     }
     return result;
 }
@@ -173,7 +173,7 @@ void writeOutput(ofstream& outFile, const string& input, const string& result) {
     outFile<<input<<" = "<<result<<endl;
 }
 
-void readLines(ifstream& inFile, ofstream& outFile) {                          //This will read individual lines from the file until eof
+void readLines(ifstream& inFile, ofstream& outFile, string outputFilename, bool& outputWritten) {   //This will read individual lines from the file until eof
     string input;
     int lineNumber = 1;
 
@@ -181,16 +181,22 @@ void readLines(ifstream& inFile, ofstream& outFile) {                          /
         if (validityChecker(input, lineNumber)) {           //Call validityChecker function to confirm the lines are in the proper format
             string result = parseAndPush(input);            //Call parseAndPush function to begin process of identifying output and set it to the result
             cout<<input<<" = "<<result<<endl;               //Display input and output to terminal
-            writeOutput(outFile, input, result);            //Write output file
+            if (result != "") {
+                if (!outputWritten) {
+                    outFile.open(outputFilename, ios::app); //Open output file for output to be appended
+                    outputWritten = true;
+                }
+                writeOutput(outFile, input, result);        //Write output file
+            }
         }
         lineNumber++;                                       //Increment line number for validityChecker
     }
 }
 
-string createOutputFilename(const string& filename) {       //Create a new filename with " output" appended
-    int dotPos = filename.find_last_of('.');             //Find the position of the dot
+string createOutputFilename(const string& filename) {       //Create a new filename with " - output" appended
+    int dotPos = filename.find_last_of('.');                //Find the position of the dot
     if (dotPos != string::npos) {
-        return filename.substr(0, dotPos) + " output" + filename.substr(dotPos); //And presuming it exists, append " output to it"
+        return filename.substr(0, dotPos) + " - output" + filename.substr(dotPos); //And presuming it exists, append " - output" to it
     }
     return filename + " output";                            //If the filename doesn't have a type associated, then just output will be appended
 }
@@ -206,10 +212,16 @@ void menu() {                                   //This function welcomes the use
         openInputFile(inFile, filename);
 
         if(inFile) {
-            string outputFilename = createOutputFilename(filename);  //Create output filename
-            outFile.open(outputFilename, ios::app);                  //Open output file for output to be appended
-            readLines(inFile, outFile);
-            outFile.close();
+            bool outputWritten = false;
+            string outputFilename = createOutputFilename(filename);  //Create output filename                                              
+            readLines(inFile, outFile, outputFilename, outputWritten);
+
+            if (!outputWritten) {
+                cout<<"No valid input found. No outputfile created."<<endl;
+            } 
+            else {
+                outFile.close();
+            }
         }
         else {
             cout<<"Error reading file. ";
