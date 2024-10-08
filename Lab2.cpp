@@ -140,36 +140,37 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
     return result;
 }*/
 
-void parseAndPush(const string& input) {                     //Driver function for the recursive parseAndPush
-    Stack stack(input.size());
-    int index = 0;  
-    parseAndPush(input, index, stack);
-
-    while (!stack.isEmpty()) {
-        cout<<stack.pop();
-    }
-    cout<<endl;
-}
-
-void parseAndPush(const string& input, int& index, Stack& stack) { //Main recursive function
-    if (index >= input.size()) {                             //Base case
+void parseAndPushR(const string& input, int& index, Stack& stack) { //Main recursive function
+    if (index >= input.size()) {                                    //Base case
         return;
     }
 
-    string c = string(1, input[index]);
-    index++;
+    string c = string(1, input[index]);                             //Extract the character
+    index++;                                                        //Increase the index
 
     if (isOperator(c)) {
-        parseAndPush(input, index, stack);
-        parseAndPush(input, index, stack);
+        parseAndPushR(input, index, stack);                         //Begin recursive calls to balance the characters in the input
+        parseAndPushR(input, index, stack);
 
-        string operand1 = stack.pop();
+        string operand1 = stack.pop();                              //The previous operands+operator combo will be combined into a single string
         string operand2 = stack.pop();
         string postfix = operand2 + operand1 + c;
         stack.push(postfix);
     } else {
-        stack.push(c);
+        stack.push(c);                                              //Otherwise, push the operator to the stack
     }
+}
+
+string parseAndPush(const string& input) {                      //Driver function for the recursive parseAndPush
+    Stack stack(input.size());                                  //Initialize a stack of the input size
+    int index = 0;                                              //Set index to 0
+    string result;                                              //Create a variable to return
+    parseAndPushR(input, index, stack);                         //Recursively called the parseAndPush function
+
+    while (!stack.isEmpty()) {                                  //And then we pop everything off of the stack for display
+        result += stack.pop();
+    }
+    return result;
 }
 
 void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
