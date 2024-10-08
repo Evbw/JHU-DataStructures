@@ -93,7 +93,7 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
     return true;
 }
 
-string parseAndPush(const string& input) {                      //Create a stack and push the items read from the line to it
+/*string parseAndPush(const string& input) {                      //Create a stack and push the items read from the line to it
     Stack stack(input.size());
     string result;
 
@@ -138,13 +138,21 @@ string parseAndPush(const string& input) {                      //Create a stack
         result += stack.pop();
     }
     return result;
-}
+}*/
 
-/* void parseAndPush(const string& input) {                     //I haven't tested this, but this is an effort to recursively add items to the stack
+void parseAndPush(const string& input) {                     //Driver function for the recursive parseAndPush
     Stack stack(input.size());
     int index = 0;  
+    parseAndPush(input, index, stack);
 
-    if (index >= input.size()) {                                //Base case
+    while (!stack.isEmpty()) {
+        cout<<stack.pop();
+    }
+    cout<<endl;
+}
+
+void parseAndPush(const string& input, int& index, Stack& stack) { //Main recursive function
+    if (index >= input.size()) {                             //Base case
         return;
     }
 
@@ -152,8 +160,8 @@ string parseAndPush(const string& input) {                      //Create a stack
     index++;
 
     if (isOperator(c)) {
-        parseAndPush(input);
-        parseAndPush(input);
+        parseAndPush(input, index, stack);
+        parseAndPush(input, index, stack);
 
         string operand1 = stack.pop();
         string operand2 = stack.pop();
@@ -162,12 +170,7 @@ string parseAndPush(const string& input) {                      //Create a stack
     } else {
         stack.push(c);
     }
-
-    while (!stack.isEmpty()) {
-        cout<<stack.pop();
-    }
-    cout<<endl;
-}*/
+}
 
 void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
     outFile<<input<<" = "<<result<<endl;
