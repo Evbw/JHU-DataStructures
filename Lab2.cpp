@@ -137,14 +137,14 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
             operandCount++;
         }
         else {                                                  //No spaces, no parentheses, and anything not from A-Z or 0-9 is not allowed
-            cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
+            cout<<"Invalid format for line # "<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
             return false;
         }
 
     }
 
     if (operatorCount != operandCount -1) {
-        cout<<"Invalid number of operators on line"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
+        cout<<"Invalid number of operators on line #"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
     }
 
     return true;
@@ -309,11 +309,22 @@ void readLines(ifstream& inFile, ofstream& outFile, string outputFilename, bool&
 */   
 
 string createOutputFilename(const string& filename) {       //Create a new filename with " - output" appended
-    int dotPos = filename.find_last_of('.');                //Find the position of the dot
-    if (dotPos != string::npos) {
-        return filename.substr(0, dotPos) + " - output" + filename.substr(dotPos); //And presuming it exists, append " - output" to it
+    string outputFilename;
+    cout<<"Enter the name of the output file or press enter to use default filename. Filetype will be a txt: "<<endl;
+    getline(cin,outputFilename);
+
+    if (outputFilename.empty()) {                           //If the user chooses to use the default file name, follow default behavior    
+        int dotPos = filename.find_last_of('.');            //Find the position of the dot in the input file
+        if (dotPos != string::npos) {
+            return filename.substr(0, dotPos) + " - output" + ".txt"; //And presuming it exists, append " - output" to it
+        }
+        return filename + " output";                        //If the filename doesn't have a type associated, then just output will be appended
     }
-    return filename + " output";                            //If the filename doesn't have a type associated, then just output will be appended
+    else {
+            return outputFilename + ".txt";
+         }
+
+    return outputFilename;                                  //Return the user created filename.
 }
 
 /*  ----------------------------------------------------------
