@@ -16,6 +16,14 @@ void openInputFile(ifstream& inFile, string& filename) {        //File opening o
     }
 }
 
+/*  ----------------------------------------------------------
+    Class: Stack
+    Description: This class implements a stack data structure for storing operators
+                 and operands. The stack supports standard operations such as push,
+                 pop, peek, and checking if it is empty.
+    ----------------------------------------------------------
+*/
+
 class Stack {                                                   //Add Stack class to handle creation of stack and handling stack functions
     private:
         int top;
@@ -68,13 +76,44 @@ class Stack {                                                   //Add Stack clas
         }
 };
 
+/*  ----------------------------------------------------------
+    Method: isOperator
+    Description: This method checks if a given character is a valid operator (+, -, /, *, ^) for the submitted expression.
+    Parameters:
+        - c (const string&): The character to be checked.
+    Return:
+        - bool: Returns true if the character is valid as described in the return statement, false otherwise.
+    ----------------------------------------------------------
+*/
+
 bool isOperator(const string& c) {                              //Check if the character is an operator
     return (c == "+" || c == "-" || c == "*" || c == "/" || c == "$");
 }
 
+/*  Method: isOperand
+    Description: This method checks if a given character is a valid operand (a letter or number) for the submitted expression.
+    Parameters:
+        - c (const string&): The character to be checked.
+    Return:
+        - bool: Returns true if the character is valid as described in the return statement, false otherwise.
+    ----------------------------------------------------------
+*/
+
 bool isOperand(const string& c) {                               //Check if the character is an operand
     return (c[0] >= 'A' && c[0] <= 'Z') || (c[0] >= '0' && c[0] <= '9');
 }
+
+/*  ----------------------------------------------------------
+    Method: validityChecker
+    Description: This method checks if a given input string is a valid prefix expression. It ensures that the expression
+                 starts with an operator, contains valid characters, and has the correct number of operators and operands.
+    Parameters:
+        - input (const string&): The input string to be checked.
+        - lineNumber (int): The line number of the input file being checked for error reporting.
+    Return:
+        - bool: Returns true if the input string is a valid prefix expression, false otherwise
+    ----------------------------------------------------------
+*/
 
 bool validityChecker(const string& input, int lineNumber) {     //Check to confirm the line being checked is indeed a prefix form equation
 
@@ -88,16 +127,16 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
 
     for (int i = 0; i < input.size(); i++) {                    //The next step is to iterate through all of the characters to confirm they are prefix
 
-        string c = string(1, input[i]);                         //No spaces, no parentheses, and anything from A-Z or 0-9 is not allowed
+        string c = string(1, input[i]);                         
 
-        if (isOperator(c)) {
+        if (isOperator(c)) {                                    //Count operators
             operatorCount++;
             
         }
-        else if (isOperand(c)) {
+        else if (isOperand(c)) {                                //Count operands
             operandCount++;
         }
-        else {
+        else {                                                  //No spaces, no parentheses, and anything not from A-Z or 0-9 is not allowed
             cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
             return false;
         }
@@ -158,6 +197,18 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
     return result;
 }*/
 
+/*  ----------------------------------------------------------
+    Method: parseAndPushR
+    Description: Recursively processes a character (operator or operand) from the input string and pushes it
+                 onto the stack. It handles different cases depending on the character being an operator or
+                 operand.
+    Parameters:
+        - stack (Stack&): The stack onto which the character is pushed.
+        - index (int&): The index where the character resides on the input string.
+        - input (const string&): The string that contains the prefix expression.
+    ----------------------------------------------------------
+*/
+
 void parseAndPushR(const string& input, int& index, Stack& stack) { //Main recursive function
     if (index >= input.size()) {                                    //Base case
         return;
@@ -179,7 +230,17 @@ void parseAndPushR(const string& input, int& index, Stack& stack) { //Main recur
     }
 }
 
-string parseAndPush(const string& input) {                      //Driver function for the recursive parseAndPush
+/*  ----------------------------------------------------------
+    Method: parseAndPush
+    Description: Driver function for the recursive parseAndPushR.
+    Parameters:
+        - input (const string&): The string that contains the prefix expression
+    Return:
+        - The postfix result from the parseAndPushR method.
+    ----------------------------------------------------------
+*/
+
+string parseAndPush(const string& input) {
     Stack stack(input.size());                                  //Initialize a stack of the input size
     int index = 0;                                              //Set index to 0
     string result;                                              //Create a variable to return
@@ -191,9 +252,31 @@ string parseAndPush(const string& input) {                      //Driver functio
     return result;
 }
 
+/*  ----------------------------------------------------------
+    Method: writeOutput
+    Description: Writes the processed results to the output file. Ensures the valid results are written.
+    Parameters:
+        - result (const string&): The result from the parseAndPush function, a postfix expression.
+        - input (const string&): The string that contains the prefix expression
+        - outFile (ofstream&): The output file, to which the results are added.
+    ----------------------------------------------------------
+*/
+
 void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
     outFile<<input<<" = "<<result<<endl;
 }
+
+/*  ----------------------------------------------------------
+    Method: readLines
+    Description: Reads the input line by line, validates each line, then stores the result to print to terminal and pass
+                 to the writeOutput method.
+    Parameters:
+        - outputWritten (bool&): A flag to indicate if any output has been written, and if not, open the output file.
+        - outputFilename (string): The name of the output file.
+        - outFile (ofstream&): The output file, to which the results are added.
+        - inFile (ifstream&): The input file, from which the lines are read.
+    ----------------------------------------------------------
+*/
 
 void readLines(ifstream& inFile, ofstream& outFile, string outputFilename, bool& outputWritten) {   //This will read individual lines from the file until eof
     string input;
@@ -215,6 +298,16 @@ void readLines(ifstream& inFile, ofstream& outFile, string outputFilename, bool&
     }
 }
 
+/*  ----------------------------------------------------------
+    Method: createOutputFilename
+    Description: Creates the name of the output file
+    Parameters:
+        - filename (const string&): The input filename, to which "- output" is added.
+    Returns:
+        - A string containing the filename.
+    ----------------------------------------------------------
+*/   
+
 string createOutputFilename(const string& filename) {       //Create a new filename with " - output" appended
     int dotPos = filename.find_last_of('.');                //Find the position of the dot
     if (dotPos != string::npos) {
@@ -222,6 +315,17 @@ string createOutputFilename(const string& filename) {       //Create a new filen
     }
     return filename + " output";                            //If the filename doesn't have a type associated, then just output will be appended
 }
+
+/*  ----------------------------------------------------------
+    Method: menu
+    Description: Reads the input file, checks for valid input, and outputs the result
+    Parameters:
+        - The input file containing lines of prefix expressions.
+    Return:
+        - For each line, the program will output a valid expression or a message indicating it is invalid.
+          Will output valid lines to a file.
+    ----------------------------------------------------------
+*/
 
 void menu() {                                   //This function welcomes the user and requests input
     ifstream inFile;
@@ -259,6 +363,16 @@ void menu() {                                   //This function welcomes the use
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
 }
+
+/*  ----------------------------------------------------------
+    Method: main
+    Description: The entry point of the program. Relays to the menu function.
+    Parameters:
+        - none
+    Return:
+        - 0 when the program ends.
+    ----------------------------------------------------------
+*/
 
 int main() {                                    //Main driver function. Calls handler function
     menu();
