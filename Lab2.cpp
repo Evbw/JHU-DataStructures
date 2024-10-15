@@ -83,13 +83,31 @@ bool validityChecker(const string& input, int lineNumber) {     //Check to confi
         return false;
     }
 
+    int operatorCount = 0;
+    int operandCount = 0;
+
     for (int i = 0; i < input.size(); i++) {                    //The next step is to iterate through all of the characters to confirm they are prefix
+
         string c = string(1, input[i]);                         //No spaces, no parentheses, and anything from A-Z or 0-9 is not allowed
-        if (!isOperator(c) && !isOperand(c)) {
+
+        if (isOperator(c)) {
+            operatorCount++;
+            
+        }
+        else if (isOperand(c)) {
+            operandCount++;
+        }
+        else {
             cout<<"Invalid format for line #"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
             return false;
         }
+
     }
+
+    if (operatorCount != operandCount -1) {
+        cout<<"Invalid number of operators on line"<<lineNumber<<". Please confirm it is in prefix form. Operands should only be capital letters (A-Z) and numbers (0-9)."<<endl;
+    }
+
     return true;
 }
 
