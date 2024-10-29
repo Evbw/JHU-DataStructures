@@ -13,6 +13,10 @@ class Node {
     Node(int freq, Node* l, Node* r) : character('\0'), frequency(freq), left(l), right(r) {}
 };
 
+class PriorityQueue {
+
+};
+
 int main() {
 
     return 0;
