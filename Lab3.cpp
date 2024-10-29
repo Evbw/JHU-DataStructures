@@ -3,19 +3,6 @@
 #include <fstream>
 using namespace std;
 
-void openInputFile(ifstream& inFile, string& filename) {        //File opening operation
-    cout<<"Enter the filename: "<<endl;                         //Request name of input file
-    getline(cin, filename);                                     //Get input
-    inFile.open(filename);                                      //Open file!
-    while (!inFile) {                                           //If the file fails to open, enter a loop until a valid file name is chosen
-        cout<<"File failed to open. Please ensure the file exists and you have the correct permissions."<<endl;
-        cout<<"Enter the filename: "<<endl;
-        inFile.clear();
-        getline(cin, filename);
-        inFile.open(filename);
-    }
-}
-
 class Node {
     char character;
     int frequency;
@@ -38,29 +25,43 @@ void preOrderTraversal(Node* root, string code) {
     
 }
 
-int main() {
+int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
     ifstream inFile;
+    inFile.open(filename);                                      //Open file!
+
+    while (!inFile) {                                           //If the file fails to open, enter a loop until a valid file name is chosen
+        cout<<"Error reading frequency table. Please try again"<<endl;
+        return 0;
+    }
+
+    int count = 0;
+    char hyphen;
+
+    while (inFile>>characters[count]>>hyphen>>frequencies[count]) {
+        if (hyphen != '-') {
+            cout<<"hypen error"<<endl;
+            return 0;
+        }
+        count++;
+    }
+    inFile.close();
+    cout<<count<<endl;
+    return count;
+}
+
+int main() {
     string freqFileTable, clearTextFile, encodedFile, choice = "y";
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     cout<<"Enter the name of the file containing the frequency table: "<<endl;
     cin>>freqFileTable;
 
-    do {                                        //do while loop to allow multiple inputs from the user
-        openInputFile(inFile, freqFileTable);
+    char characters[26];
+    int frequencies[26];
 
-        if(inFile) {
-            
-        }
-        else {
-            cout<<"Error reading file. Would you like to try again?";
-            cin>>choice;
-        }
-
-        inFile.close();                         //Close and clear the file for multiple inputs.
-        inFile.clear();
-        
-    } while (choice == "y" || choice == "yes" || choice == "Y" || choice == "Yes");
-
+    if (readFrequencyTable(freqFileTable, characters, frequencies) == 0) {
+        cout<<"Error reading frequency table. Please try again"<<endl;
+        return 0;
+    }
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
