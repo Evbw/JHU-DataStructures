@@ -24,19 +24,35 @@ class PriorityQueue {
 
         void push(Node* newNode) {
 
-            int i;
-            for (i = size-1; i >= 0 && elements[i]->frequency > newNode->frequency; i--) {
-                elements[i+1] = elements[i];
+            int i = size;
+            elements[size++] = newNode;
+
+            while (i > 0 && elements[(i-1)/2]->frequency>elements[i]->frequency) {
+                swap(elements[i], elements[(i-1)/2]);
+                i = (i-1)/2;
             }
-            elements[i+1] = newNode;
-            size++;
         }
 
         Node* pop() {
             if (size == 0) {
                 return nullptr;
             }
-            return elements[--size];
+            Node* minNode = elements[0];
+            elements[0] = elements[--size];
+
+            int i = 0;
+            while (2 * i + 1<size) {
+                int j = 2 * i + 1;
+                if (j +1 < size && elements[j]->frequency > elements[j+1]->frequency) {
+                    j++;
+                }
+                if (elements[i]->frequency <= elements[j]->frequency) {
+                    break;
+                }
+                swap(elements[i], elements[j]);
+                i = j;
+            }
+            return minNode;
         }
 
         int getSize() const {
@@ -132,7 +148,7 @@ int main() {
 */
 
     char characters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int frequencies[] = {1, 45, 72, 13, 8, 8000};
+    int frequencies[] = {5, 9, 12, 13, 16, 45};
     
     Node* root = buildHuffmanTree(characters, frequencies, 6);
 
