@@ -136,6 +136,8 @@ int main() {
     
     Node* root = buildHuffmanTree(characters, frequencies, 6);
 
+    preOrderTraversal(root, "");
+
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
     return 0;
