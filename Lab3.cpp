@@ -25,7 +25,7 @@ class PriorityQueue {
         void push(Node* newNode) {
 
             int i;
-            for (i = size-i; i >= 0 && elements[i]->frequency > newNode->frequency; i--) {
+            for (i = size-1; i >= 0 && elements[i]->frequency > newNode->frequency; i--) {
                 elements[i+1] = elements[i];
             }
             elements[i+1] = newNode;
@@ -44,7 +44,7 @@ class PriorityQueue {
         }
 };
 
-Node* buildHuffmanTree(char characters[], int frequencesp[], int n) {
+Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     PriorityQueue pq;
 
     for (int i = 0; i < n; i++) {
@@ -56,7 +56,7 @@ Node* buildHuffmanTree(char characters[], int frequencesp[], int n) {
         Node* left = pq.pop();
         Node* right = pq.pop();
         Node* newNode = new Node(left->frequency + right->frequency, left, right);
-        pq.push(newNode)
+        pq.push(newNode);
     }
 
     return pq.pop();
@@ -130,6 +130,11 @@ int main() {
         return 0;
     }
 */
+
+    char characters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    int frequencies[] = {1, 45, 72, 13, 8, 8000};
+    
+    Node* root = buildHuffmanTree(characters, frequencies, 6);
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
