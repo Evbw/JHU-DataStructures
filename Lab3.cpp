@@ -49,11 +49,29 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     return count;
 }
 
+void readTextFile(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout<<"Error opening file: "<<filename<<endl;
+        return;
+    }
+
+    string line;
+    while(getline(file, line)) {
+        cout<<line<<endl;
+    }
+    file.close();
+}
+
 int main() {
     string freqFileTable, clearTextFile, encodedFile, choice = "y";
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     cout<<"Enter the name of the file containing the frequency table: "<<endl;
     cin>>freqFileTable;
+    cout<<"Enter the name of the file containing plain text: "<<endl;
+    cin>>clearTextFile;
+    cout<<"Enter the name of the file containing encoded text: "<<endl;
+    cin>>encodedFile;
 
     char characters[26];
     int frequencies[26];
@@ -62,6 +80,13 @@ int main() {
         cout<<"Error reading frequency table. Please try again"<<endl;
         return 0;
     }
+
+    cout<<"Plain text file contents: "<<endl;
+    readTextFile(clearTextFile);
+
+    cout<<endl;
+    cout<<"Encoded text file contents: "<<endl;
+    readTextFile(encodedFile);
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
