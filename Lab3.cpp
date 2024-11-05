@@ -4,6 +4,8 @@
 using namespace std;
 
 class Node {
+
+public:
     char character;
     int frequency;
     Node* left;
@@ -22,7 +24,13 @@ Node* buildHuffmanTree(char characters[], int frequencesp[], int n) {
 }
 
 void preOrderTraversal(Node* root, string code) {
-    
+    if (!root) return;
+    if (root->character != '\0') {
+        cout<<root->character<<":"<<code<<endl;
+    }
+
+    preOrderTraversal(root->left, code+"0");
+    preOrderTraversal(root->right, code+"1");
 }
 
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
@@ -65,28 +73,24 @@ void readTextFile(const string& filename) {
 
 int main() {
     string freqFileTable, clearTextFile, encodedFile, choice = "y";
+
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
-    cout<<"Enter the name of the file containing the frequency table: "<<endl;
+/*  cout<<"Enter the name of the file containing the frequency table: "<<endl;
     cin>>freqFileTable;
     cout<<"Enter the name of the file containing plain text: "<<endl;
     cin>>clearTextFile;
     cout<<"Enter the name of the file containing encoded text: "<<endl;
     cin>>encodedFile;
+*/
 
-    char characters[26];
-    int frequencies[26];
+//    char characters[26];
+//    int frequencies[26];
 
-    if (readFrequencyTable(freqFileTable, characters, frequencies) == 0) {
+/*    if (readFrequencyTable(freqFileTable, characters, frequencies) == 0) {
         cout<<"Error reading frequency table. Please try again"<<endl;
         return 0;
     }
-
-    cout<<"Plain text file contents: "<<endl;
-    readTextFile(clearTextFile);
-
-    cout<<endl;
-    cout<<"Encoded text file contents: "<<endl;
-    readTextFile(encodedFile);
+*/
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
