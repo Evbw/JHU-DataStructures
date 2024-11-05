@@ -5,18 +5,43 @@ using namespace std;
 
 class Node {
 
-public:
-    char character;
-    int frequency;
-    Node* left;
-    Node* right;
+    public:
+        char character;
+        int frequency;
+        Node* left;
+        Node* right;
 
-    Node(char c, int freq) : character(c), frequency(freq), left(nullptr), right(nullptr) {}
-    Node(int freq, Node* l, Node* r) : character('\0'), frequency(freq), left(l), right(r) {}
+        Node(char c, int freq) : character(c), frequency(freq), left(nullptr), right(nullptr) {}
+        Node(int freq, Node* l, Node* r) : character('\0'), frequency(freq), left(l), right(r) {}
 };
 
 class PriorityQueue {
+    private:
+        Node* elements[1000]; //arbitrary size for testing
+        int size;
+    public:
+        PriorityQueue() : size(0) {}
 
+        void push(Node* newNode) {
+
+            int i;
+            for (i = size-i; i >= 0 && elements[i]->frequency > newNode->frequency; i--) {
+                elements[i+1] = elements[i];
+            }
+            elements[i+1] = newNode;
+            size++;
+        }
+
+        Node* pop() {
+            if (size == 0) {
+                return nullptr;
+            }
+            return elements[--size];
+        }
+
+        int getSize() const {
+            return size;
+        }
 };
 
 Node* buildHuffmanTree(char characters[], int frequencesp[], int n) {
