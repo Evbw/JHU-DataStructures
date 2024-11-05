@@ -45,7 +45,21 @@ class PriorityQueue {
 };
 
 Node* buildHuffmanTree(char characters[], int frequencesp[], int n) {
+    PriorityQueue pq;
 
+    for (int i = 0; i < n; i++) {
+        Node* newNode = new Node(characters[i], frequencies[i]);
+        pq.push(newNode);
+    }
+
+    while (pq.getSize() > 1) {
+        Node* left = pq.pop();
+        Node* right = pq.pop();
+        Node* newNode = new Node(left->frequency + right->frequency, left, right);
+        pq.push(newNode)
+    }
+
+    return pq.pop();
 }
 
 void preOrderTraversal(Node* root, string code) {
