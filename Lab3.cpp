@@ -85,9 +85,9 @@ void preOrderTraversal(Node* root, string code, char codeCharacters[], string co
         codeCharacters[codeIndex] = root->character;
         codes[codeIndex] = code;
         codeIndex++;
+
+        treeStructure += string(1, root->character) + ":" + to_string(root->frequency) + " ";
     }
-    treeStructure += (root->character != '\0') ? string(1, root->character) : "NODE";
-    treeStructure += ":" + to_string(root->frequency) + " ";
 
     preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);
     preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);
