@@ -78,14 +78,16 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     return pq.pop();
 }
 
-void preOrderTraversal(Node* root, string code) {
+void preOrderTraversal(Node* root, string code, string& treeStructure) {
     if (!root) return;
     if (root->character != '\0') {
         cout<<root->character<<":"<<code<<endl;
     }
+    treeStructure += (root->character != '\0') ? root->character : "NODE";
+    treeStructure += ":" + to_string(root->frequency) + " ";
 
-    preOrderTraversal(root->left, code+"0");
-    preOrderTraversal(root->right, code+"1");
+    preOrderTraversal(root->left, code+"0", treeStructure);
+    preOrderTraversal(root->right, code+"1", treeStructure);
 }
 
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
@@ -108,7 +110,6 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
         count++;
     }
     inFile.close();
-    cout<<count<<endl;
     return count;
 }
 
@@ -127,32 +128,34 @@ void readTextFile(const string& filename) {
 }
 
 int main() {
-    string freqFileTable, clearTextFile, encodedFile, choice = "y";
+    string freqFileTable, clearTextFile, encodedFile, treeStructure, choice = "y";
 
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
-/*  cout<<"Enter the name of the file containing the frequency table: "<<endl;
+    cout<<"Enter the name of the file containing the frequency table: "<<endl;
     cin>>freqFileTable;
     cout<<"Enter the name of the file containing plain text: "<<endl;
     cin>>clearTextFile;
     cout<<"Enter the name of the file containing encoded text: "<<endl;
     cin>>encodedFile;
-*/
 
-//    char characters[26];
-//    int frequencies[26];
+    char characters[26];
+    int frequencies[26];
 
-/*    if (readFrequencyTable(freqFileTable, characters, frequencies) == 0) {
+    int n = readFrequencyTable(freqFileTable, characters, frequencies);
+    if ( n == 0) {
         cout<<"Error reading frequency table. Please try again"<<endl;
         return 0;
     }
-*/
-
-    char characters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int frequencies[] = {5, 9, 12, 13, 16, 45};
     
-    Node* root = buildHuffmanTree(characters, frequencies, 6);
+    Node* root = buildHuffmanTree(characters, frequencies, n);
 
-    preOrderTraversal(root, "");
+    cout<<"Huffman Codes:"<<endl<<endl;
+    preOrderTraversal(root, "", treeStructure);
+
+    cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
+
+    cout<<"Clear text file:"<<endl;
+    readTextFile(clearTextFile);
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
