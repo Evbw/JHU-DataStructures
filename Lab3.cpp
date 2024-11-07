@@ -97,6 +97,11 @@ string encodeText(const string& text, char codeCharacters[], string codes[], int
     string encodedText;
     for (char c : text) {
 
+        if (c == '\n') {
+            encodedText += "\n";
+            continue;
+        }
+
         if ((c < 'A' || c > 'Z') && (c < 'a' || c > 'z')) {
             continue;
         }
@@ -171,7 +176,6 @@ string readTextFile(const string& filename) {
     string text, line;
     while(getline(file, line)) {
         text += line + "\n";
-        cout<<line<<endl;
     }
     file.close();
     return text;
@@ -207,7 +211,6 @@ int main() {
 
     cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
 
-    cout<<"Clear text file:"<<endl;
     string clearText = readTextFile(clearTextFile);
 
     cout<<endl;
