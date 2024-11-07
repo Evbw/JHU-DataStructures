@@ -73,6 +73,7 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
         Node* right = pq.pop();
         Node* newNode = new Node(left->frequency + right->frequency, left, right);
         pq.push(newNode);
+
     }
 
     return pq.pop();
@@ -255,26 +256,33 @@ int main() {
     cout<<endl;
     cout<<"Encoded Text:"<<endl<<encodeText(clearText, codeCharacters, codes, codeIndex)<<endl;
 
-    cout<<"Choose an option for decoding:"<<endl;
-    cout<<"1. Read encoded text from file"<<endl;
-    cout<<"2. Enter encoded text manually"<<endl;
-    cout<<"Select 1 or 2"<<endl;
+    cout<<"Choose an option:"<<endl;
+    cout<<"1. Decoded text from file"<<endl;
+    cout<<"2. Enter encoded text manually for decoding"<<endl;
+    cout<<"3. Enter text manually for encoding"<<endl;
+    cout<<"Select 1, 2, or 3"<<endl;
     cin>>choice;
     cin.ignore();
 
-    string encodedInput;
+    string encodedInput, manualInput;
     if (choice == "1") {
         encodedInput = readEncodedText(encodedFile);
     } else if (choice == "2") {
         cout<<"Enter the encoded text in 1s and 0s"<<endl;
         getline(cin, encodedInput);
+        string decodedText = decodeText(encodedInput, root);
+        cout<<"Text decoded from manual input:"<<endl<<decodedText<<endl;
+    } else if (choice == "3") {
+        cout<<"Enter the text to be encoded: "<<endl;
+        getline(cin, manualInput);
+        string manualEncodedText = encodeText(manualInput, codeCharacters, codes, codeIndex);
+        cout<<"Encoded Text for the entered text: "<<endl<<manualEncodedText<<endl;
     } else {
-        cout<<"Defaulting to reading from file."<<endl;
+        cout<<"Defaulting to decoding text from file."<<endl;
         encodedInput = readEncodedText(encodedFile);
     }
 
-    string decodedText = decodeText(encodedInput, root);
-    cout<<"Decoded Text:"<<endl<<decodedText<<endl;
+    
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
