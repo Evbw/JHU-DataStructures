@@ -93,6 +93,25 @@ void preOrderTraversal(Node* root, string code, char codeCharacters[], string co
     preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);
 }
 
+string encodeText(const string& text, char codeCharacters[], string codes[], int codeIndex) {
+    string encodedText;
+    for (char c : text) {
+        bool found = false;
+        for (int i = 0; i < codeIndex; i++) {
+            if (codeCharacters[i] == c) {
+                encodedText += codes[i];
+                found = true;
+                break;
+            }
+        }
+
+        if (!found && c != '\n') {
+            cout<<"Warning: Character '"<<c<<"' not found in Huffman codes. Skipping it."<<endl;
+        }
+    }
+    return encodedText;
+}
+
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
     ifstream inFile;
     inFile.open(filename);                                      //Open file!
