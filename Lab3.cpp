@@ -123,6 +123,30 @@ string encodeText(const string& text, char codeCharacters[], string codes[], int
     return encodedText;
 }
 
+string decodeText(const string& encodedText, Node* root) {
+    string decodedText;
+    Node* currentNode = root;
+
+    for (char bit : encodedText) {
+        if (bit == '\n') {
+            decodedText += '\n';
+        }
+
+        if (bit == '0') {
+            currentNode = currentNode->left;
+        } else if (bit == '1') {
+            currentNode = currentNode->right;
+        }
+
+        if (currentNode->left == nullptr && currentNode->right == nullptr) {
+            decodedText += currentNode->character;
+            currentNode = root;
+        }
+    }
+
+    return decodedText;
+}
+
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
     ifstream inFile;
     inFile.open(filename);                                      //Open file!
