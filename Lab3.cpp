@@ -152,18 +152,20 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     return count;
 }
 
-void readTextFile(const string& filename) {
+string readTextFile(const string& filename) {
     ifstream file(filename);
     if (!file.is_open()) {
         cout<<"Error opening file: "<<filename<<endl;
-        return;
+        return "";
     }
 
-    string line;
+    string text, line;
     while(getline(file, line)) {
+        text += line + "\n";
         cout<<line<<endl;
     }
     file.close();
+    return text;
 }
 
 int main() {
