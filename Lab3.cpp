@@ -192,7 +192,7 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
 
 string readTextFile(const string& filename) {
     ifstream file(filename);
-    if (!file.is_open()) {
+    while (!file.is_open()) {
         cout<<"Error opening file: "<<filename<<endl;
         return "";
     }
@@ -205,8 +205,23 @@ string readTextFile(const string& filename) {
     return text;
 }
 
+string readEncodedText(const string& filename) {
+    ifstream file(filename);
+    while (!file.is_open()) {
+        cout<<"Error opening file: "<<filename<<endl;
+        return "";
+    }
+
+    string encodedText, line;
+    while (getline(file, line)) {
+        encodedText += line + "\n";
+    }
+    file.close();
+    return encodedText;
+}
+
 int main() {
-    string freqFileTable, clearTextFile, encodedFile, treeStructure, choice = "y";
+    string freqFileTable, clearTextFile, encodedFile, treeStructure, choice;
 
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     cout<<"Enter the name of the file containing the frequency table: "<<endl;
@@ -238,7 +253,28 @@ int main() {
     string clearText = readTextFile(clearTextFile);
 
     cout<<endl;
-    cout<<"Encoded Text:"<<endl<<encodeText(clearText, codeCharacters, codes, codeIndex);
+    cout<<"Encoded Text:"<<endl<<encodeText(clearText, codeCharacters, codes, codeIndex)<<endl;
+
+    cout<<"Choose an option for decoding:"<<endl;
+    cout<<"1. Read encoded text from file"<<endl;
+    cout<<"2. Enter encoded text manually"<<endl;
+    cout<<"Select 1 or 2"<<endl;
+    cin>>choice;
+    cin.ignore();
+
+    string encodedInput;
+    if (choice == "1") {
+        encodedInput = readEncodedText(encodedFile);
+    } else if (choice == "2") {
+        cout<<"Enter the encoded text in 1s and 0s"<<endl;
+        getline(cin, encodedInput);
+    } else {
+        cout<<"Defaulting to reading from file."<<endl;
+        encodedInput = readEncodedText(encodedFile);
+    }
+
+    string decodedText = decodeText(encodedInput, root);
+    cout<<"Decoded Text:"<<endl<<decodedText<<endl;
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
