@@ -96,6 +96,11 @@ void preOrderTraversal(Node* root, string code, char codeCharacters[], string co
 string encodeText(const string& text, char codeCharacters[], string codes[], int codeIndex) {
     string encodedText;
     for (char c : text) {
+
+        if ((c < 'A' || c > 'Z') && (c < 'a' || c > 'z')) {
+            continue;
+        }
+
         char searchChar = (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;
         bool found = false;
         for (int i = 0; i < codeIndex; i++) {
@@ -131,6 +136,10 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
         if (hyphen != '-') {
             cout<<"Hyphen error"<<endl;
             return 0;
+        }
+
+        if ((characters[count] >= 'a' && characters[count] <= 'z')) {
+            characters[count] = characters[count] - 'a' + 'A';
         }
 
         if (characters[count] >= 'a' && characters[count] <= 'z') {
