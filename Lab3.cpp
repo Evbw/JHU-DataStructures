@@ -78,16 +78,19 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     return pq.pop();
 }
 
-void preOrderTraversal(Node* root, string code, string& treeStructure) {
+void preOrderTraversal(Node* root, string code, char codeCharacters[], string codes[], int& codeIndex, string& treeStructure) {
     if (!root) return;
     if (root->character != '\0') {
         cout<<root->character<<":"<<code<<endl;
+        codeCharacters[codeIndex] = root->character;
+        codes[codeIndex] = code;
+        codeIndex++;
     }
-    treeStructure += (root->character != '\0') ? root->character : "NODE";
+    treeStructure += (root->character != '\0') ? string(1, root->character) : "NODE";
     treeStructure += ":" + to_string(root->frequency) + " ";
 
-    preOrderTraversal(root->left, code+"0", treeStructure);
-    preOrderTraversal(root->right, code+"1", treeStructure);
+    preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);
+    preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);
 }
 
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
@@ -140,6 +143,9 @@ int main() {
 
     char characters[26];
     int frequencies[26];
+    char codeCharacters[26];
+    string codes[26];
+    int codeIndex = 0;
 
     int n = readFrequencyTable(freqFileTable, characters, frequencies);
     if ( n == 0) {
@@ -150,7 +156,7 @@ int main() {
     Node* root = buildHuffmanTree(characters, frequencies, n);
 
     cout<<"Huffman Codes:"<<endl<<endl;
-    preOrderTraversal(root, "", treeStructure);
+    preOrderTraversal(root, "", codeCharacters, codes, codeIndex, treeStructure);
 
     cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
 
