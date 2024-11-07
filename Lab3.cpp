@@ -96,9 +96,10 @@ void preOrderTraversal(Node* root, string code, char codeCharacters[], string co
 string encodeText(const string& text, char codeCharacters[], string codes[], int codeIndex) {
     string encodedText;
     for (char c : text) {
+        char searchChar = (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;
         bool found = false;
         for (int i = 0; i < codeIndex; i++) {
-            if (codeCharacters[i] == c) {
+            if (codeCharacters[i] == searchChar) {
                 encodedText += codes[i];
                 found = true;
                 break;
@@ -125,11 +126,27 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     char hyphen;
 
     while (inFile>>characters[count]>>hyphen>>frequencies[count]) {
+        bool found = false;
+
         if (hyphen != '-') {
-            cout<<"hypen error"<<endl;
+            cout<<"Hyphen error"<<endl;
             return 0;
         }
-        count++;
+
+        if (characters[count] >= 'a' && characters[count] <= 'z') {
+            characters[count] = characters[count] - 'a' + 'A';
+        }
+
+        for (int i = 0; i < count; i++) {
+            if (characters[i] == characters[count]) {
+                frequencies[i] += frequencies[count];
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            count++;
+        }
     }
     inFile.close();
     return count;
@@ -180,7 +197,10 @@ int main() {
     cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
 
     cout<<"Clear text file:"<<endl;
-    readTextFile(clearTextFile);
+    string clearText = readTextFile(clearTextFile);
+
+    cout<<endl;
+    cout<<"Encoded Text:"<<endl<<encodeText(clearText, codeCharacters, codes, codeIndex);
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
