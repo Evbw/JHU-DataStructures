@@ -271,6 +271,35 @@ string readEncodedText(const string& filename) {
     return encodedText;
 }
 
+/*  ----------------------------------------------------------
+    Method: createOutputFilename
+    Description: Creates the name of the output file
+    Parameters:
+        - filename (const string&): The input filename, to which "- output" is added.
+    Returns:
+        - A string containing the filename.
+    ----------------------------------------------------------
+*/   
+
+string createOutputFilename(const string& filename) {       //Create a new filename with " - output" appended
+    string outputFilename;
+    cout<<"Enter the name of the output file or press enter to use default filename. Filetype will be a txt: "<<endl;
+    getline(cin,outputFilename);
+
+    if (outputFilename.empty()) {                           //If the user chooses to use the default file name, follow default behavior    
+        int dotPos = filename.find_last_of('.');            //Find the position of the dot in the input file
+        if (dotPos != string::npos) {
+            return filename.substr(0, dotPos) + " - output" + ".txt"; //And presuming it exists, append " - output" to it
+        }
+        return filename + " output";                        //If the filename doesn't have a type associated, then just output will be appended
+    }
+    else {
+            return outputFilename + ".txt";
+         }
+
+    return outputFilename;                                  //Return the user created filename.
+}
+
 int main() {
     string freqFileTable, clearTextFile, encodedFile, treeStructure, choice, encodedInput, decodedText, manualInput;
     char characters[26];
@@ -280,6 +309,7 @@ int main() {
     int codeIndex = 0;
     int n = 0;
     Node* root = nullptr;
+    char saveChoice = "n";
 
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     
@@ -361,6 +391,13 @@ int main() {
                 break;
             }
             cout<<"Decoded text: "<<endl<<decodedText<<endl<<endl;
+            cout<<"Would you like to save the result to a file? (y/n) "<<endl;
+            char saveChoice;
+            cin>>saveChoice;
+            cin.ignore();
+            if (saveChoice == "y" || saveChoice == "yes" || saveChoice == "Y" || csaveChoiceoice == "Yes") {
+
+            }
        } else if (choice == "2") {
             choice = "0";
             cout<<"Would you like to encode from file or enter text manually?"<<endl;
