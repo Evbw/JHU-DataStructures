@@ -191,6 +191,53 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     return count;
 }
 
+void createFrequencyTable(char characters[], int frequencies[], int& n) {
+    cout<<"Enter the frequency table in the format 'A - 00'. Type END to finish."<<endl;
+    string line;
+    n = 0;
+    
+    while (true) {
+        cout<<"Enter entry #"<<(n+1)<<": ";
+        getline(cin, line);
+        if (line == "END") {
+            break;
+        }
+        
+        if (line.length() >= 5 && line[1] == ' ' && line[2] == '-' && line[3] == ' ') {
+            char character = line[0];
+            int frequency = stoi(line.substr(4));
+
+            if ((character < 'A' || (character > 'Z' && character < 'a') || character > 'z') || frequency < 0) {
+                cout<<"Invalid input. Please enter an upper or lowercase letter followed by a frequency at or above 0."<<endl;
+                continue;
+            }
+
+            if (character >= 'a' && character <= 'z') {
+                character = character - 'a' + 'A';
+            }
+
+            bool found = false;
+
+            for (int i = 0; i < n; i++) {
+                if (characters[i] == character) {
+                    frequencies[i] += frequency;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                characters[n] = character;
+                frequencies[n] = frequency;
+                n++;
+            } else {
+                cout<<"Invalid format. Enter the frequency table in the format 'A - 00'."<<endl;
+            }
+        }
+    }
+    cout<<"Frequency Table entry complete."<<endl;
+}
+
 string readTextFile(const string& filename) {
     ifstream file(filename);
     while (!file.is_open()) {
@@ -222,29 +269,76 @@ string readEncodedText(const string& filename) {
 }
 
 int main() {
-    string freqFileTable, clearTextFile, encodedFile, treeStructure, choice;
-
-    cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
-    cout<<"Enter the name of the file containing the frequency table: "<<endl;
-    cin>>freqFileTable;
-    cout<<"Enter the name of the file containing plain text: "<<endl;
-    cin>>clearTextFile;
-    cout<<"Enter the name of the file containing encoded text: "<<endl;
-    cin>>encodedFile;
-
+    string freqFileTable, clearTextFile, encodedFile, treeStructure, choice, encodedInput, manualInput;
     char characters[26];
     int frequencies[26];
     char codeCharacters[26];
     string codes[26];
     int codeIndex = 0;
+    int n = 0;
+    Node* root = nullptr;
 
-    int n = readFrequencyTable(freqFileTable, characters, frequencies);
-    if ( n == 0) {
-        cout<<"Error reading frequency table. Please try again"<<endl;
-        return 0;
+    cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
+    
+    while (true) {
+        cout<<"Choose the method of entry for the frequency table"<<endl;
+        cout<<"1. Load from file"<<endl;
+        cout<<"2. Free entry"<<endl;
+        cout<<"3. Exit program"<<endl;
+        cin>>choice;
+        cin.ignore();
+
+        if (choice == "1") {
+            cout<<"Enter the name of the file containing the frequency table: "<<endl;
+            cin>>freqFileTable;
+            int n = readFrequencyTable(freqFileTable, characters, frequencies);
+            if (n == 0) {
+                cout<<"Error reading frequency table. Please try again"<<endl;
+                continue;
+            }
+            root = buildHuffmanTree(characters, frequencies, n);
+            cout<<"Frequency Table loaded from file."<<endl;
+        } else if (choice == "2") {
+            createFrequencyTable(characters, frequencies, n);
+            if (n == 0) {
+                cout<<"No valid frequency table entered. Please try again."<<endl;
+                continue;
+            }
+            root = buildHuffmanTree(characters, frequencies, n);
+        } else {
+            cout<<"Exiting program."<<endl;
+        }
+
+        cout<<"1. Decode text"<<endl;
+        cout<<"2. Encode text"<<endl;
+        cout<<"3. Enter text manually for encoding"<<endl;
+        cout<<"Select 1, 2, or 3"<<endl;
+        cin>>choice;
+        cin.ignore();
+
+       if (choice == "1") {
+            encodedInput = readEncodedText(encodedFile);
+        } else if (choice == "2") {
+            cout<<"Enter the encoded text in 1s and 0s"<<endl;
+            getline(cin, encodedInput);
+            string decodedText = decodeText(encodedInput, root);
+            cout<<"Text decoded from manual input:"<<endl<<decodedText<<endl;
+        } else if (choice == "3") {
+            cout<<"Enter the text to be encoded: "<<endl;
+            getline(cin, manualInput);
+            string manualEncodedText = encodeText(manualInput, codeCharacters, codes, codeIndex);
+            cout<<"Encoded Text for the entered text: "<<endl<<manualEncodedText<<endl;
+        } else {
+            cout<<"Defaulting to decoding text from file."<<endl;
+            encodedInput = readEncodedText(encodedFile);
+        }
     }
     
-    Node* root = buildHuffmanTree(characters, frequencies, n);
+    cout<<"Enter the name of the file containing plain text: "<<endl;
+    cin>>clearTextFile;
+    cout<<"Enter the name of the file containing encoded text: "<<endl;
+    cin>>encodedFile;
+
 
     cout<<"Huffman Codes:"<<endl<<endl;
     preOrderTraversal(root, "", codeCharacters, codes, codeIndex, treeStructure);
@@ -255,34 +349,6 @@ int main() {
 
     cout<<endl;
     cout<<"Encoded Text:"<<endl<<encodeText(clearText, codeCharacters, codes, codeIndex)<<endl;
-
-    cout<<"Choose an option:"<<endl;
-    cout<<"1. Decoded text from file"<<endl;
-    cout<<"2. Enter encoded text manually for decoding"<<endl;
-    cout<<"3. Enter text manually for encoding"<<endl;
-    cout<<"Select 1, 2, or 3"<<endl;
-    cin>>choice;
-    cin.ignore();
-
-    string encodedInput, manualInput;
-    if (choice == "1") {
-        encodedInput = readEncodedText(encodedFile);
-    } else if (choice == "2") {
-        cout<<"Enter the encoded text in 1s and 0s"<<endl;
-        getline(cin, encodedInput);
-        string decodedText = decodeText(encodedInput, root);
-        cout<<"Text decoded from manual input:"<<endl<<decodedText<<endl;
-    } else if (choice == "3") {
-        cout<<"Enter the text to be encoded: "<<endl;
-        getline(cin, manualInput);
-        string manualEncodedText = encodeText(manualInput, codeCharacters, codes, codeIndex);
-        cout<<"Encoded Text for the entered text: "<<endl<<manualEncodedText<<endl;
-    } else {
-        cout<<"Defaulting to decoding text from file."<<endl;
-        encodedInput = readEncodedText(encodedFile);
-    }
-
-    
 
     cout<<endl;
     cout<<"Exiting program. Come back now, ya hear?"<<endl;
