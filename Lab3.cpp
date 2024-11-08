@@ -6,13 +6,13 @@ using namespace std;
 class Node {
 
     public:
-        char character;
+        string characters;
         int frequency;
         Node* left;
         Node* right;
 
-        Node(char c, int freq) : character(c), frequency(freq), left(nullptr), right(nullptr) {}
-        Node(int freq, Node* l, Node* r) : character('\0'), frequency(freq), left(l), right(r) {}
+        Node(char c, int freq) : characters(1, c), frequency(freq), left(nullptr), right(nullptr) {}
+        Node(string chars, int freq, Node* l, Node* r) : characters(chars), frequency(freq), left(l), right(r) {}
 };
 
 class PriorityQueue {
@@ -71,7 +71,7 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     while (pq.getSize() > 1) {
         Node* left = pq.pop();
         Node* right = pq.pop();
-        Node* newNode = new Node(left->frequency + right->frequency, left, right);
+        Node* newNode = new Node(left->characters + right->characters, left->frequency + right->frequency, left, right);
         pq.push(newNode);
 
     }
@@ -81,13 +81,14 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
 
 void preOrderTraversal(Node* root, string code, char codeCharacters[], string codes[], int& codeIndex, string& treeStructure) {
     if (!root) return;
-    if (root->character != '\0') {
-        cout<<root->character<<":"<<code<<endl;
-        codeCharacters[codeIndex] = root->character;
+
+    treeStructure += root->characters + ":" + to_string(root->frequency) + " ";
+
+    if (root->left == nullptr && root->right == nullptr) {
+        cout<<root->characters<<":"<<code<<endl;
+        codeCharacters[codeIndex] = root->characters[0];
         codes[codeIndex] = code;
         codeIndex++;
-
-        treeStructure += string(1, root->character) + ":" + to_string(root->frequency) + " ";
     }
 
     preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);
@@ -140,7 +141,7 @@ string decodeText(const string& encodedText, Node* root) {
         }
 
         if (currentNode->left == nullptr && currentNode->right == nullptr) {
-            decodedText += currentNode->character;
+            decodedText += currentNode->characters;
             currentNode = root;
         }
     }
@@ -295,6 +296,7 @@ int main() {
         if (choice == "1") {
             cout<<"Enter the name of the file containing the frequency table: "<<endl;
             cin>>freqFileTable;
+            cin.ignore();
             int n = readFrequencyTable(freqFileTable, characters, frequencies);
             if (n == 0) {
                 cout<<"Error reading frequency table. Please try again"<<endl;
@@ -314,12 +316,14 @@ int main() {
                 cout<<"Frequency table required. Exiting program."<<endl;
                 break;
             }
+            cout<<"Using previously created frequency table"<<endl;
         } else {
             cout<<"Exiting program."<<endl;
             break;
         }
-
-        cout<<"Huffman Codes:"<<endl<<endl;
+        codeIndex = 0;
+        treeStructure.clear();
+        cout<<endl<<"Huffman Codes:"<<endl<<endl;
         preOrderTraversal(root, "", codeCharacters, codes, codeIndex, treeStructure);
         cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
 
@@ -335,15 +339,17 @@ int main() {
 
        if (choice == "1") {
             choice = "0";
-            cout<<endl<<endl<<"Would you like to decode from file or enter encoded text manually?"<<endl;
+            cout<<endl<<"Would you like to decode from file or enter encoded text manually?"<<endl;
             cout<<"1. Decode from file"<<endl;
             cout<<"2. Decode manually"<<endl;
             cout<<"3. Exit program"<<endl;
             cout<<"Select 1, 2, or 3"<<endl;
             cin>>choice;
+            cin.ignore();
             if (choice == "1") {
                 cout<<endl<<"Enter the name of the file containing encoded text: "<<endl;
                 cin>>encodedFile;
+                cin.ignore();
                 encodedInput = readEncodedText(encodedFile);
                 decodedText = decodeText(encodedInput, root);
             } else if (choice == "2") {
@@ -354,7 +360,7 @@ int main() {
                 cout<<"Exiting program."<<endl;
                 break;
             }
-            cout<<"Decoded text: "<<endl<<decodedText<<endl;
+            cout<<"Decoded text: "<<endl<<decodedText<<endl<<endl;
        } else if (choice == "2") {
             choice = "0";
             cout<<"Would you like to encode from file or enter text manually?"<<endl;
@@ -363,15 +369,22 @@ int main() {
             cout<<"3. Exit program"<<endl;
             cout<<"Select 1, 2, or 3"<<endl;
             cin>>choice;
+            cin.ignore();
             if (choice == "1") {
                 cout<<endl<<"Enter the name of the file containing encoded text: "<<endl;
-                cin>>encodedFile;
-                encodedInput = readEncodedText(encodedFile);
-                string decodedText = decodeText(encodedInput, root);
+                cin>>clearTextFile;
+                cin.ignore();
+                string clearText = readTextFile(clearTextFile);
+                if (!clearText.empty()) {
+                    encodedInput = encodeText(clearText, codeCharacters, codes, codeIndex);
+                } else {
+                    cout<<"Unable to read file. Please try again."<<endl;
+                    continue;
+                }
             } else if (choice == "2") {
                 cout<<endl<<"Enter the text to be encoded: "<<endl;
                 getline(cin, manualInput);
-                string encodedInput = encodeText(manualInput, codeCharacters, codes, codeIndex);
+                encodedInput = encodeText(manualInput, codeCharacters, codes, codeIndex);
             } else {
                 cout<<"Exiting program."<<endl;
                 break;
@@ -383,7 +396,7 @@ int main() {
         }
     }
 
-    if (choice != "3") {
+    if (choice != "3" && choice != "4") {
         cout<<endl;
         cout<<"Exiting program. Come back now, ya hear?"<<endl;
     }
