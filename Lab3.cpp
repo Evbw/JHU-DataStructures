@@ -3,8 +3,21 @@
 #include <fstream>
 using namespace std;
 
-class Node {
+/*  ----------------------------------------------------------
+    Class: Node
+    Description: Represents a node in the Huffman tree.
+    Members:
+        - characters (string): Holds either a single character or a combined string of characters for internal nodes.
+        - frequency (int): The frequency of the characters.
+        - left (Node*): Pointer to the left child node.
+        - right (Node*): Pointer to the right child node.
+    Constructors:
+        - Node(char c, int freq): Initializes a leaf node with a single character.
+        - Node(string chars, int freq, Node* l, Node* r): Initializes an internal node with combined characters.
+    ----------------------------------------------------------
+*/
 
+class Node {
     public:
         string characters;
         int frequency;
@@ -14,6 +27,19 @@ class Node {
         Node(char c, int freq) : characters(1, c), frequency(freq), left(nullptr), right(nullptr) {}
         Node(string chars, int freq, Node* l, Node* r) : characters(chars), frequency(freq), left(l), right(r) {}
 };
+
+/*  ----------------------------------------------------------
+    Class: PriorityQueue
+    Description: Implements a min-heap priority queue to store Node pointers.
+    Members:
+        - elements (Node*[]): Array to hold nodes.
+        - size (int): Current number of elements in the queue.
+    Methods:
+        - push(Node* newNode): Inserts a new node into the queue while maintaining the min-heap property.
+        - pop(): Removes and returns the node with the smallest frequency
+        - getSize() const: Returns the current size of the queue
+    ----------------------------------------------------------
+*/
 
 class PriorityQueue {
     private:
@@ -60,6 +86,18 @@ class PriorityQueue {
         }
 };
 
+/*  ----------------------------------------------------------
+    Method: buildHuffmanTree
+    Description: Constructs a Huffman tree using the given characters and their frequencies.
+    Parameters:
+        - characters (char[]): Array of characters.
+        - frequencies (int[]): Array of character frequencies.
+        - n (int): Number of unique characters.
+    Returns:
+        - Node*: Root of the constructed Huffman tree.
+    ----------------------------------------------------------
+*/
+
 Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     PriorityQueue pq;
 
@@ -79,6 +117,19 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
     return pq.pop();
 }
 
+/*  ----------------------------------------------------------
+    Method: preOrderTraversal
+    Description: Traverses the Huffman tree in preorder to display and store Huffman codes.
+    Parameters:
+        - root (Node*): Pointer to the root of the tree.
+        - code (string): Current Huffman code.
+        - codeCharacters (char[]): Array to store characters for Huffman codes.
+        - codes (string[]): Array to store the corresponding Huffman codes.
+        - codeIndex (int&): Index for inserting into codeCharacters and codes.
+        - treeStructure (string&): String representation of the tree structure.
+    ----------------------------------------------------------
+*/
+
 void preOrderTraversal(Node* root, string code, char codeCharacters[], string codes[], int& codeIndex, string& treeStructure) {
     if (!root) return;
 
@@ -94,6 +145,19 @@ void preOrderTraversal(Node* root, string code, char codeCharacters[], string co
     preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);
     preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);
 }
+
+/*  ----------------------------------------------------------
+    Method: encodeText
+    Description: Encodes a given text using the generated Huffman codes.
+    Parameters:
+        - text (const string&): The input text to be encoded.
+        - codeCharacters (char[]): Array of characters for Huffman codes.
+        - codes (string[]): Array of corresponding Huffman codes.
+        - codeIndex (int): Number of Huffman codes available.
+    Returns:
+        - string: The encoded text.
+    ----------------------------------------------------------
+*/
 
 string encodeText(const string& text, char codeCharacters[], string codes[], int codeIndex) {
     string encodedText;
@@ -125,6 +189,17 @@ string encodeText(const string& text, char codeCharacters[], string codes[], int
     return encodedText;
 }
 
+/*  ----------------------------------------------------------
+    Method: decodeText
+    Description: Decodes an encoded string using the Huffman tree.
+    Parameters:
+        - encodedText (const string&): The encoded input string.
+        - root (Node*): Pointer to the root of the Huffman tree.
+    Returns:
+        - string: The decoded text.
+    ----------------------------------------------------------
+*/
+
 string decodeText(const string& encodedText, Node* root) {
     string decodedText;
     Node* currentNode = root;
@@ -148,6 +223,18 @@ string decodeText(const string& encodedText, Node* root) {
 
     return decodedText;
 }
+
+/*  ----------------------------------------------------------
+    Method: readFrequencyTable
+    Description: Reads a frequency table from a file and populates character and frequency arrays.
+    Parameters:
+        - filename (const string&): The name of the file containing the frequency table.
+        - characters (char[]): Array to store characters.
+        - frequencies (int[]): Array to store character frequencies.
+    Returns:
+        - int: The number of characters read from the file.
+    ----------------------------------------------------------
+*/
 
 int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
     ifstream inFile;
@@ -191,6 +278,16 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     inFile.close();
     return count;
 }
+
+/*  ----------------------------------------------------------
+    Method: createFrequencyTable
+    Description: Allows the user to manuall input a frequency table.
+    Parameters:
+        - characters (char[]): Array to store characters.
+        - frequencies (int[]): Array to store character frequencies.
+        - n (int&): Reference to store the number of characters.
+    ----------------------------------------------------------
+*/
 
 void createFrequencyTable(char characters[], int frequencies[], int& n) {
     cout<<"Enter the frequency table in the format 'A 0' or 'A 00', where A is a letter (upper or lowercase) and 0 is a number 0-9. Type END to finish."<<endl;
@@ -241,6 +338,16 @@ void createFrequencyTable(char characters[], int frequencies[], int& n) {
     cout<<"Frequency Table entry complete."<<endl;
 }
 
+/*  ----------------------------------------------------------
+    Method: readTextFile
+    Description: Reads and returns the content of a specified file.
+    Parameters:
+        - filename (const string&): The name of the file to read.
+    Returns:
+        - string: The content of the file.
+    ----------------------------------------------------------
+*/
+
 string readTextFile(const string& filename) {
     ifstream file(filename);
     while (!file.is_open()) {
@@ -255,6 +362,16 @@ string readTextFile(const string& filename) {
     file.close();
     return text;
 }
+
+/*  ----------------------------------------------------------
+    Method: readEncodedText
+    Description: Reads and returns encoded text from a specified file.
+    Parameters:
+        - filename (const string&): The name of the file to read.
+    Returns:
+        - string: The encoded content of the file.
+    ----------------------------------------------------------
+*/
 
 string readEncodedText(const string& filename) {
     ifstream file(filename);
@@ -312,6 +429,22 @@ string createOutputFilename(const string& filename) {       //Create a new filen
 
     return outputFilename;                                  //Return the user created filename.
 }
+
+/*  ----------------------------------------------------------
+    Function: main
+    Description: The main entry point for the Huffman encoding program. Provides a menu-driven interface for the user to:
+        - Load or create a frequency table.
+        - Build a Huffman tree.
+        - Encode or decode text.
+        - Output results to a file if desired.
+    Steps:
+        - Prompts the user to choose an input method for the frequency table.
+        - Builds the Huffman tree based on the chosen frequency table.
+        - Allows the user to encode or decode text and optionall save the output.
+    Returns:
+        - int: Exit status of the program (0 for successful execution)
+    ----------------------------------------------------------
+*/   
 
 int main() {
     string freqFileTable, clearTextFile, encodedFile, treeStructure, choice, encodedInput, decodedText, manualInput;
