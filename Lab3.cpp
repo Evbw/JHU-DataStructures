@@ -272,6 +272,20 @@ string readEncodedText(const string& filename) {
 }
 
 /*  ----------------------------------------------------------
+    Method: writeOutput
+    Description: Writes the processed results to the output file. Ensures the valid results are written.
+    Parameters:
+        - result (const string&): The result from the parseAndPush function, a postfix expression.
+        - input (const string&): The string that contains the prefix expression
+        - outFile (ofstream&): The output file, to which the results are added.
+    ----------------------------------------------------------
+*/
+
+void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
+    outFile<<input<<" = "<<result<<endl;
+}
+
+/*  ----------------------------------------------------------
     Method: createOutputFilename
     Description: Creates the name of the output file
     Parameters:
@@ -292,8 +306,7 @@ string createOutputFilename(const string& filename) {       //Create a new filen
             return filename.substr(0, dotPos) + " - output" + ".txt"; //And presuming it exists, append " - output" to it
         }
         return filename + " output";                        //If the filename doesn't have a type associated, then just output will be appended
-    }
-    else {
+    } else {
             return outputFilename + ".txt";
          }
 
@@ -309,7 +322,7 @@ int main() {
     int codeIndex = 0;
     int n = 0;
     Node* root = nullptr;
-    char saveChoice = "n";
+    string saveChoice;
 
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     
@@ -395,8 +408,16 @@ int main() {
             char saveChoice;
             cin>>saveChoice;
             cin.ignore();
-            if (saveChoice == "y" || saveChoice == "yes" || saveChoice == "Y" || csaveChoiceoice == "Yes") {
-
+            if (tolower(saveChoice) == 'y') {
+                string outputFilename = createOutputFilename(clearTextFile);
+                ofstream outFile(outputFilename);
+                if (!outFile){
+                    cout<<"File creation failed. Please ensure you have the correct permissions."<<endl;
+                } else {
+                    writeOutput(outFile, encodedFile, decodedText);
+                    cout<<"File saved as "<<outputFilename<<endl;
+                    outFile.close();
+                }
             }
        } else if (choice == "2") {
             choice = "0";
