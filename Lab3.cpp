@@ -281,8 +281,8 @@ string readEncodedText(const string& filename) {
     ----------------------------------------------------------
 */
 
-void writeOutput(ofstream& outFile, const string& input, const string& result) {  //Write the input and output to file
-    outFile<<input<<" = "<<result<<endl;
+void writeOutput(ofstream& outFile, const string& result) {  //Write the input and output to file
+    outFile<<result<<endl;
 }
 
 /*  ----------------------------------------------------------
@@ -403,7 +403,7 @@ int main() {
                 cout<<"Exiting program."<<endl;
                 break;
             }
-            cout<<"Decoded text: "<<endl<<decodedText<<endl<<endl;
+            cout<<"Decoded text: "<<endl<<decodedText<<endl;
             cout<<"Would you like to save the result to a file? (y/n) "<<endl;
             char saveChoice;
             cin>>saveChoice;
@@ -414,7 +414,7 @@ int main() {
                 if (!outFile){
                     cout<<"File creation failed. Please ensure you have the correct permissions."<<endl;
                 } else {
-                    writeOutput(outFile, encodedFile, decodedText);
+                    writeOutput(outFile, decodedText);
                     cout<<"File saved as "<<outputFilename<<endl;
                     outFile.close();
                 }
@@ -448,6 +448,21 @@ int main() {
                 break;
             }
             cout<<"Encoded text: "<<endl<<encodedInput<<endl;
+            cout<<"Would you like to save the result to a file? (y/n) "<<endl;
+            char saveChoice;
+            cin>>saveChoice;
+            cin.ignore();
+            if (tolower(saveChoice) == 'y') {
+                string outputFilename = createOutputFilename(clearTextFile);
+                ofstream outFile(outputFilename);
+                if (!outFile){
+                    cout<<"File creation failed. Please ensure you have the correct permissions."<<endl;
+                } else {
+                    writeOutput(outFile, encodedInput);
+                    cout<<"File saved as "<<outputFilename<<endl;
+                    outFile.close();
+                }
+            }
         } else {
             cout<<"Exiting program."<<endl;
             break;
