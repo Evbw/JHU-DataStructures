@@ -192,7 +192,7 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
 }
 
 void createFrequencyTable(char characters[], int frequencies[], int& n) {
-    cout<<"Enter the frequency table in the format 'A - 00'. Type END to finish."<<endl;
+    cout<<"Enter the frequency table in the format 'A 0' or 'A 00', where A is a letter (upper or lowercase) and 0 is a number 0-9. Type END to finish."<<endl;
     string line;
     n = 0;
     
@@ -203,9 +203,9 @@ void createFrequencyTable(char characters[], int frequencies[], int& n) {
             break;
         }
         
-        if (line.length() >= 5 && line[1] == ' ' && line[2] == '-' && line[3] == ' ') {
+        if (line.length() >= 2 && line[1] == ' ') {
             char character = line[0];
-            int frequency = stoi(line.substr(4));
+            int frequency = stoi(line.substr(1));
 
             if ((character < 'A' || (character > 'Z' && character < 'a') || character > 'z') || frequency < 0) {
                 cout<<"Invalid input. Please enter an upper or lowercase letter followed by a frequency at or above 0."<<endl;
@@ -230,8 +230,10 @@ void createFrequencyTable(char characters[], int frequencies[], int& n) {
                 characters[n] = character;
                 frequencies[n] = frequency;
                 n++;
+            } else if (found) {
+                cout<<"Invalid format. Entry already made."<<endl;
             } else {
-                cout<<"Invalid format. Enter the frequency table in the format 'A - 00'."<<endl;
+                cout<<"Invalid format. Enter the frequency table in the format 'A 0' or 'A 00', where 0 is a number 0-9."<<endl;
             }
         }
     }
@@ -333,7 +335,7 @@ int main() {
 
        if (choice == "1") {
             choice = "0";
-            cout<<endl<<"Would you like to decode from file or enter encoded text manually?"<<endl;
+            cout<<endl<<endl<<"Would you like to decode from file or enter encoded text manually?"<<endl;
             cout<<"1. Decode from file"<<endl;
             cout<<"2. Decode manually"<<endl;
             cout<<"3. Exit program"<<endl;
