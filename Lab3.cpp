@@ -43,7 +43,7 @@ class Node {
 
 class PriorityQueue {
     private:
-        Node* elements[1000]; //arbitrary size for testing
+        Node* elements[1000];                           //Arbitrary size for implementation purposes
         int size;
     public:
         PriorityQueue() : size(0) {}
@@ -133,17 +133,17 @@ Node* buildHuffmanTree(char characters[], int frequencies[], int n) {
 void preOrderTraversal(Node* root, string code, char codeCharacters[], string codes[], int& codeIndex, string& treeStructure) {
     if (!root) return;
 
-    treeStructure += root->characters + ":" + to_string(root->frequency) + " ";
+    treeStructure += root->characters + ":" + to_string(root->frequency) + " ";         //Build the treeStructure for display
 
-    if (root->left == nullptr && root->right == nullptr) {
+    if (root->left == nullptr && root->right == nullptr) {                              //If there are no more children, bump up the codeIndex and add the next character.
         cout<<root->characters<<":"<<code<<endl;
         codeCharacters[codeIndex] = root->characters[0];
         codes[codeIndex] = code;
         codeIndex++;
     }
 
-    preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);
-    preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);
+    preOrderTraversal(root->left, code+"0", codeCharacters, codes, codeIndex, treeStructure);       //Move left down the tree
+    preOrderTraversal(root->right, code+"1", codeCharacters, codes, codeIndex, treeStructure);      //Move right down the tree
 }
 
 /*  ----------------------------------------------------------
@@ -163,16 +163,16 @@ string encodeText(const string& text, char codeCharacters[], string codes[], int
     string encodedText;
     for (char c : text) {
 
-        if (c == '\n') {
+        if (c == '\n') {                                                //Maintain carriage returns/line separations
             encodedText += "\n";
             continue;
         }
 
-        if ((c < 'A' || c > 'Z') && (c < 'a' || c > 'z')) {
+        if ((c < 'A' || c > 'Z') && (c < 'a' || c > 'z')) {             //Skip punctuation and spaces
             continue;
         }
 
-        char searchChar = (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c;
+        char searchChar = (c >= 'a' && c <= 'z') ? (c - 'a' + 'A') : c; //Convert to uppercase for encoding purposes
         bool found = false;
         for (int i = 0; i < codeIndex; i++) {
             if (codeCharacters[i] == searchChar) {
@@ -182,7 +182,7 @@ string encodeText(const string& text, char codeCharacters[], string codes[], int
             }
         }
 
-        if (!found && c != '\n') {
+        if (!found && c != '\n') {                                      //Handle anything not found in the tree
             cout<<"Warning: Character '"<<c<<"' not found in Huffman codes. Skipping it."<<endl;
         }
     }
@@ -204,8 +204,8 @@ string decodeText(const string& encodedText, Node* root) {
     string decodedText;
     Node* currentNode = root;
 
-    for (char bit : encodedText) {
-        if (bit == '\n') {
+    for (char bit : encodedText) {                                              //Move through the entire text bit by bit
+        if (bit == '\n') {                                                      //Maintain carriage returns/line separations
             decodedText += '\n';
         }
 
@@ -215,7 +215,7 @@ string decodeText(const string& encodedText, Node* root) {
             currentNode = currentNode->right;
         }
 
-        if (currentNode->left == nullptr && currentNode->right == nullptr) {
+        if (currentNode->left == nullptr && currentNode->right == nullptr) {    //Once we get to a leaf node, add those characters to the decodedText string
             decodedText += currentNode->characters;
             currentNode = root;
         }
@@ -236,11 +236,11 @@ string decodeText(const string& encodedText, Node* root) {
     ----------------------------------------------------------
 */
 
-int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {        //File opening operation
+int readFrequencyTable(const string& filename, char characters[], int frequencies[]) {
     ifstream inFile;
-    inFile.open(filename);                                      //Open file!
+    inFile.open(filename);
 
-    while (!inFile) {                                           //If the file fails to open, enter a loop until a valid file name is chosen
+    if (!inFile) {
         cout<<"Error reading frequency table. Please try again"<<endl;
         return 0;
     }
@@ -248,7 +248,7 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
     int count = 0;
     char hyphen;
 
-    while (inFile>>characters[count]>>hyphen>>frequencies[count]) {
+    while (inFile>>characters[count]>>hyphen>>frequencies[count]) {                 //Examine the file line by line and account for the hyphen
         bool found = false;
 
         if (hyphen != '-') {
@@ -256,16 +256,12 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
             return 0;
         }
 
-        if ((characters[count] >= 'a' && characters[count] <= 'z')) {
+        if ((characters[count] >= 'a' && characters[count] <= 'z')) {               //Conver letters to uppercase!
             characters[count] = characters[count] - 'a' + 'A';
         }
 
-        if (characters[count] >= 'a' && characters[count] <= 'z') {
-            characters[count] = characters[count] - 'a' + 'A';
-        }
-
-        for (int i = 0; i < count; i++) {
-            if (characters[i] == characters[count]) {
+        for (int i = 0; i < count; i++) {                                           //Checks to see if a character has previously been accounted for.
+            if (characters[i] == characters[count]) {                               //If not, the count increases for subsequent checks
                 frequencies[i] += frequencies[count];
                 found = true;
                 break;
@@ -290,12 +286,12 @@ int readFrequencyTable(const string& filename, char characters[], int frequencie
 */
 
 void createFrequencyTable(char characters[], int frequencies[], int& n) {
-    cout<<"Enter the frequency table in the format 'A 0' or 'A 00', where A is a letter (upper or lowercase) and 0 is a number 0-9. Type END to finish."<<endl;
+    cout<<"Enter the frequency table in the format 'A 0' or 'A 00', where A is a letter (upper or lowercase) and 0 is a number. Type END to finish."<<endl;
     string line;
     n = 0;
     
     while (true) {
-        cout<<"Enter entry #"<<(n+1)<<": ";
+        cout<<"Enter entry #"<<(n+1)<<": ";                                         //Request user input and create the table
         getline(cin, line);
         if (line == "END") {
             break;
@@ -310,13 +306,13 @@ void createFrequencyTable(char characters[], int frequencies[], int& n) {
                 continue;
             }
 
-            if (character >= 'a' && character <= 'z') {
+            if (character >= 'a' && character <= 'z') {                             //Conver to upper case
                 character = character - 'a' + 'A';
             }
 
             bool found = false;
 
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) {                                           //Checks for a pre-existing character added to the tree.
                 if (characters[i] == character) {
                     frequencies[i] += frequency;
                     found = true;
@@ -331,7 +327,7 @@ void createFrequencyTable(char characters[], int frequencies[], int& n) {
             } else if (found) {
                 cout<<"Invalid format. Entry already made."<<endl;
             } else {
-                cout<<"Invalid format. Enter the frequency table in the format 'A 0' or 'A 00', where 0 is a number 0-9."<<endl;
+                cout<<"Invalid format. Enter the frequency table in the format 'A 0' or 'A 00', where 0 is a number."<<endl;
             }
         }
     }
@@ -356,7 +352,7 @@ string readTextFile(const string& filename) {
     }
 
     string text, line;
-    while(getline(file, line)) {
+    while(getline(file, line)) {                                            //Add text line by line from a file to be encoded
         text += line + "\n";
     }
     file.close();
@@ -380,7 +376,7 @@ string readEncodedText(const string& filename) {
         return "";
     }
 
-    string encodedText, line;
+    string encodedText, line;                                               //Add text line by line from a file to be decoded
     while (getline(file, line)) {
         encodedText += line + "\n";
     }
@@ -460,17 +456,17 @@ int main() {
     cout<<"This program is intended to build a Huffman encoding tree which will return results in preorder traversal."<<endl<<endl;
     
     while (true) {
-        cout<<"Choose the method of entry for the frequency table"<<endl;
-        cout<<"1. Load from file"<<endl;
-        cout<<"2. Free entry"<<endl;
-        cout<<"3. Use previous"<<endl;
+        cout<<"Choose the method of entry for the frequency table"<<endl;                           //Request user input for the first part of the encoding process
+        cout<<"1. Load frequency table from file"<<endl;
+        cout<<"2. Type in frequency table"<<endl;                                                   //Grant option other than selecting a file for the frequency table
+        cout<<"3. Use previously entered frequency table"<<endl;                                    //For repeated encoding and decoding, it's easier to use a previously use frequency table
         cout<<"4. Exit program"<<endl;
         cout<<"Select 1, 2, 3, or 4"<<endl;
         cin>>choice;
         cin.ignore();
 
         if (choice == "1") {
-            cout<<"Enter the name of the file containing the frequency table: "<<endl;
+            cout<<"Enter the name of the file containing the frequency table (entries MUST be entered in the format 'A - 0', where A is a letter A-z and 0 is number): "<<endl;
             cin>>freqFileTable;
             cin.ignore();
             int n = readFrequencyTable(freqFileTable, characters, frequencies);
@@ -501,11 +497,11 @@ int main() {
         treeStructure.clear();
         cout<<endl<<"Huffman Codes:"<<endl<<endl;
         preOrderTraversal(root, "", codeCharacters, codes, codeIndex, treeStructure);
-        cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;
+        cout<<endl<<"The tree in preorder is: "<<treeStructure<<endl;                       //Display the tree created by the frequency table.
 
         choice = "0";
 
-        cout<<endl<<"Would you like to decode or encode text?"<<endl;
+        cout<<endl<<"Would you like to decode or encode text?"<<endl;                       //Give options for decoding and encoding text and files
         cout<<"1. Decode text"<<endl;
         cout<<"2. Encode text"<<endl;
         cout<<"3. Exit program"<<endl;
@@ -516,7 +512,7 @@ int main() {
        if (choice == "1") {
             choice = "0";
             cout<<endl<<"Would you like to decode from file or enter encoded text manually?"<<endl;
-            cout<<"1. Decode from file"<<endl;
+            cout<<"1. Decode from file"<<endl;                                              //Allow a text file or manual entry
             cout<<"2. Decode manually"<<endl;
             cout<<"3. Exit program"<<endl;
             cout<<"Select 1, 2, or 3"<<endl;
@@ -537,7 +533,7 @@ int main() {
                 break;
             }
             cout<<"Decoded text: "<<endl<<decodedText<<endl;
-            cout<<"Would you like to save the result to a file? (y/n) "<<endl;
+            cout<<"Would you like to save the result to a file? (y/n) "<<endl;              //Prompt the user to save a file
             char saveChoice;
             cin>>saveChoice;
             cin.ignore();
@@ -554,7 +550,7 @@ int main() {
             }
        } else if (choice == "2") {
             choice = "0";
-            cout<<"Would you like to encode from file or enter text manually?"<<endl;
+            cout<<"Would you like to encode from file or enter text manually?"<<endl;       //Allow a text file or manual entry
             cout<<"1. Encode from file"<<endl;
             cout<<"2. Encode manually"<<endl;
             cout<<"3. Exit program"<<endl;
@@ -581,7 +577,7 @@ int main() {
                 break;
             }
             cout<<"Encoded text: "<<endl<<encodedInput<<endl;
-            cout<<"Would you like to save the result to a file? (y/n) "<<endl;
+            cout<<"Would you like to save the result to a file? (y/n) "<<endl;              //Prompt the user to save a file
             char saveChoice;
             cin>>saveChoice;
             cin.ignore();
@@ -597,7 +593,7 @@ int main() {
                 }
             }
         } else {
-            cout<<"Exiting program."<<endl;
+            cout<<"Exiting program."<<endl;                                                 //Finally leave this cursed place
             break;
         }
     }
