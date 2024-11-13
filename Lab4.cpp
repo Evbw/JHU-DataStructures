@@ -49,6 +49,12 @@ int partition(int arr[], int left, int right, int pivotType) {
     return j;    
 }
 
+void swap(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
 void mergeSort(Node* root) {
 
 }
