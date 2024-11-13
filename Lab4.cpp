@@ -10,6 +10,21 @@ class Node{
         Node(int val) : data(val), next(nullptr){}
 };
 
+void insertionSort(int arr[], int n, int m) {
+    int data;
+    int j;
+    for (int i = n + 1; i <= m; i++) {
+        data = arr[i];
+        j = i - 1;
+
+        while (j >= n && arr[j] > data) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = data;
+    }
+}
+
 int partition(int arr[], int left, int right, int pivotType) {
     int pivot;
     int i = left + 1;
