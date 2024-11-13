@@ -88,11 +88,11 @@ void quickSortPivot1(int arr[], int left, int right) {
     }
 }
 
-void quickSortPivot100(int arr[], int left, int right) {
+void quickSortPivot50(int arr[], int left, int right) {
     
 }
 
-void quickSortPivot50(int arr[], int left, int right) {
+void quickSortPivot100(int arr[], int left, int right) {
     
 }
 
