@@ -4,7 +4,10 @@
 using namespace std;
 
 class Node{
-
+    public:
+        int data;
+        Node* next;
+        Node(int val) : data(val), next(nullptr){}
 };
 
 void quickSortPivot1(int arr[], int left, int right) {
@@ -24,7 +27,26 @@ void quickSortPivotMedian(int arr[], int left, int right) {
 }
 
 int partition(int arr[], int left, int right, int pivotType) {
+    int pivot = arr[left];
+    int i = left + 1;
+    int j = right;
 
+    while (i <= j) {
+        while (i <= j && arr[i] < pivot) {
+            i++;
+        }
+
+        while (i <= j && arr[j] > pivot) {
+            j--;
+        }
+
+        if (i < j) {
+            swap(arr[i], arr[j]);
+        }
+    }
+
+    swap(arr[left], arr[j]);
+    return j;    
 }
 
 void mergeSort(Node* root) {
