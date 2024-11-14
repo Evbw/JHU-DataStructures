@@ -191,16 +191,29 @@ int* readFile(const string& filename, int& size) {
 
 int main() {
     int size = 0;
-    int* numbers = readFile("asc1K.dat", size);
+    string filename;
+    cout<<"This program is intended to compare quick sort and merge sort."<<endl;
+    cout<<"Please enter a file consisting of integers:"<<endl;
+    cin>>filename;
+
+    int* numbers = readFile(filename, size);
 
     if (numbers != nullptr) {
+
+        //for (int i = 0; i < size; i++) {
+        //    cout<<numbers[i]<<" ";
+        //}
+        cout<<endl;
+        
+        quickSortPivot1(numbers, 0, size - 1);
+        cout<<"Sorted: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
         }
         cout<<endl;
         delete[] numbers;
     } else {
-        cout<<"Reading failed"<<endl;
+        cout<<"Reading failed."<<endl;
     }
     return 0;
 }
