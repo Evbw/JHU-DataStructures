@@ -145,14 +145,14 @@ void swap(int &a, int &b) {
     b = temp;
 }
 
-class Node{
+class Node {
     public:
         int data;
         Node* next;
         Node(int val) : data(val), next(nullptr){}
 };
 
-class RunNode{
+class RunNode {
     public:
         Node* runRoot;
         RunNode* next;
@@ -160,7 +160,30 @@ class RunNode{
 };
 
 void splitIntoRuns(Node* root, RunNode*& runsRoot) {
+    runsRoot = nullptr;
+    RunNode* tail = nullptr;
 
+    Node* current = root;
+
+    while (current) {
+        Node* runStart = current;
+
+        while ((current->next) && (current->data <= current->next->data)) {
+            current = current->next;
+        }
+
+        Node* nextRun = current->next;
+        current->next = nullptr;
+
+        RunNode* newRun = new RunNode(runStart);
+        if (!runsRoot) {
+            runsRoot = newRun;
+        } else {
+            tail->next = newRun;
+        }
+        tail = newRun;
+        current = nextRun;
+    }
 }
 
 void mergeSort(Node*& root) {
