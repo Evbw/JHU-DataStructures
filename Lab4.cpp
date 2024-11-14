@@ -31,24 +31,27 @@ int partition(int arr[], int left, int right, int pivotType) {
     int j = right;
 
     switch (pivotType){
-        case 1:
-            pivot = arr[left];
+        case 1: {
+             pivot = arr[left];
             break;
-        case 2:
+        }
+        case 2: {
             if (right - left + 1 <= 100) {
                 insertionSort(arr, left, right);
                 return left;
             }
             pivot = arr[left];
             break;
-        case 3:
+        }
+        case 3: {
             if (right - left + 1 <= 50) {
                 insertionSort(arr, left, right);
                 return left;
             }
             pivot = arr[left];
             break;
-        case 4:
+        }
+        case 4: {
             int mid = (left + right)/2;
             if ((arr[left] < arr[mid] && arr[mid] < arr[right]) || (arr[right] < arr[mid] && arr[mid] < arr[left])) {
                 pivot = arr[mid];
@@ -60,8 +63,10 @@ int partition(int arr[], int left, int right, int pivotType) {
                 swap(arr[left], arr[right]);
             }
             break;
-        default:
+        }
+        default: {
             pivot = arr[left];
+        }
     }
 
     while (i <= j) {
@@ -115,13 +120,87 @@ void splitIntoRuns(Node* root, Node* next) {
 }
 
 Node* sortedMerge(Node* a, Node* b) {
-
+    return a;
 }
 
 void insert(Node*& head, int data) {
 
 }
 
-int main() {
+int countNumbers(const string& filename) {
+    int count = 0;
+    char c;
+    bool inNumber = false;
 
+    ifstream file(filename);
+    while (!file.is_open()) {
+        cout<<"Error opening file: "<<filename<<endl;
+        return 0;
+    }
+
+    while (file.get(c)) {
+        if (c >= '0' && c <= '9') {
+            inNumber = true;
+        } else if (inNumber) {
+            count++;
+            inNumber = false;
+        }
+    }
+
+    if (inNumber) {
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
+int* readFile(const string& filename, int& size) {
+    size = countNumbers(filename);
+    if (size == 0) {
+        return nullptr;
+    }
+    int* numbers = new int[size];
+
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout<<"Error opening file: "<<filename<<endl;
+        delete[] numbers;
+        return nullptr;
+    }
+    
+    int index = 0;
+    string currentNumber = "";
+    char c;
+    while (file.get(c)) {
+        if (c >= '0' && c <= '9') {
+            currentNumber += c;
+        } else if (!currentNumber.empty()) {
+            numbers[index++] = stoi(currentNumber);
+            currentNumber = "";
+        }
+    }
+
+    if (!currentNumber.empty()) {
+        numbers[index++] = stoi(currentNumber);
+    }
+
+    file.close();
+    return numbers;
+}
+
+int main() {
+    int size = 0;
+    int* numbers = readFile("asc1K.dat", size);
+
+    if (numbers != nullptr) {
+        for (int i = 0; i < size; i++) {
+            cout<<numbers[i]<<" ";
+        }
+        cout<<endl;
+        delete[] numbers;
+    } else {
+        cout<<"Reading failed"<<endl;
+    }
+    return 0;
 }
