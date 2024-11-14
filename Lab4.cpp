@@ -32,7 +32,7 @@ int partition(int arr[], int left, int right, int pivotType) {
 
     switch (pivotType){
         case 1: {
-             pivot = arr[left];
+            pivot = arr[left];
             break;
         }
         case 2: {
@@ -70,7 +70,7 @@ int partition(int arr[], int left, int right, int pivotType) {
     }
 
     while (i <= j) {
-        while (i <= j && arr[i] < pivot) {
+        while (i <= j && arr[i] <= pivot) {
             i++;
         }
         while (i <= j && arr[j] > pivot) {
@@ -86,10 +86,21 @@ int partition(int arr[], int left, int right, int pivotType) {
 }
 
 void quickSortPivot1(int arr[], int left, int right) {
+    if (left >= right) {
+        return;
+    }
+
+    if (right == left + 1) {
+        if (arr[left] > arr[right]) {
+            swap(arr[left],arr[right]);
+        }
+        return;
+    }
+
     if (left < right) {
         int pivotIndex = partition(arr, left, right, 1);
-        quickSortPivot1(arr, left, pivotIndex-1);
-        quickSortPivot1(arr, pivotIndex+1, right);
+        quickSortPivot1(arr, left, pivotIndex - 1);
+        quickSortPivot1(arr, pivotIndex + 1, right);
     }
 }
 
