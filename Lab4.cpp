@@ -105,11 +105,41 @@ void quickSortPivot1(int arr[], int left, int right) {
 }
 
 void quickSortPivot50(int arr[], int left, int right) {
-    
+    if (left >= right) {
+        return;
+    }
+
+    if (right == left + 1) {
+        if (arr[left] > arr[right]) {
+            swap(arr[left],arr[right]);
+        }
+        return;
+    }
+
+    if (left < right) {
+        int pivotIndex = partition(arr, left, right, 3);
+        quickSortPivot1(arr, left, pivotIndex - 1);
+        quickSortPivot1(arr, pivotIndex + 1, right);
+    }
 }
 
 void quickSortPivot100(int arr[], int left, int right) {
-    
+    if (left >= right) {
+        return;
+    }
+
+    if (right == left + 1) {
+        if (arr[left] > arr[right]) {
+            swap(arr[left],arr[right]);
+        }
+        return;
+    }
+
+    if (left < right) {
+        int pivotIndex = partition(arr, left, right, 4);
+        quickSortPivot1(arr, left, pivotIndex - 1);
+        quickSortPivot1(arr, pivotIndex + 1, right);
+    }
 }
 
 void quickSortPivotMedian(int arr[], int left, int right) {
