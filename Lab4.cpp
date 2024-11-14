@@ -3,13 +3,6 @@
 #include <fstream>
 using namespace std;
 
-class Node{
-    public:
-        int data;
-        Node* next;
-        Node(int val) : data(val), next(nullptr){}
-};
-
 void insertionSort(int arr[], int n, int m) {
     int data;
     int j;
@@ -152,12 +145,32 @@ void swap(int &a, int &b) {
     b = temp;
 }
 
-void mergeSort(Node* root) {
+class Node{
+    public:
+        int data;
+        Node* next;
+        Node(int val) : data(val), next(nullptr){}
+};
+
+class RunNode{
+    public:
+        Node* runRoot;
+        RunNode* next;
+        RunNode(Node* root) : runRoot(root), next(nullptr){}
+};
+
+void splitIntoRuns(Node* root, RunNode*& runsRoot) {
 
 }
 
-void splitIntoRuns(Node* root, Node* next) {
+void mergeSort(Node*& root) {
+    if (!root || !root->next) {
+        return;
+    }
 
+    splitIntoRuns(root);
+
+    root;
 }
 
 Node* sortedMerge(Node* a, Node* b) {
