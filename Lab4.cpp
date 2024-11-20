@@ -211,7 +211,22 @@ void mergeSort(Node*& root) {
 }
 
 Node* sortedMerge(Node* a, Node* b) {
-    return a;
+    if (!a) {
+        return b;
+    }
+    if (!b) {
+        return a;
+    }
+
+    Node* result = nullptr;
+
+    if (a->data <= b->data) {
+        result = a;
+        result->next = sortedMerge(a->next, b);
+    } else {
+        result = b;
+        result->next = sortedMerge(a, b->next);
+    }
 }
 
 void insert(Node*& head, int data) {
