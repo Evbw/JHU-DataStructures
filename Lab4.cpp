@@ -186,6 +186,19 @@ void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     }
 }
 
+Node* mergeRuns(RunNode* runsRoot) {
+    while (runsRoot && runsRoot->next) {
+        RunNode* current = runsRoot;
+        RunNode* nextRun = runsRoot->next;
+
+        current->runRoot = sortedMerge(current->runRoot, nextRun->runRoot);
+
+        runsRoot->next = nextRun->next;
+        delete nextRun;
+    }
+    return runsRoot ? runsRoot->runRoot : nullptr;
+}
+
 void mergeSort(Node*& root) {
     if (!root || !root->next) {
         return;
@@ -194,6 +207,7 @@ void mergeSort(Node*& root) {
     RunNode* runsRoot = nullptr;
     splitIntoRuns(root, runsRoot);
 
+    root = mergeRuns(runsRoot);
 }
 
 Node* sortedMerge(Node* a, Node* b) {
