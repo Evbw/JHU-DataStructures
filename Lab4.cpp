@@ -191,9 +191,9 @@ void mergeSort(Node*& root) {
         return;
     }
 
-    splitIntoRuns(root);
+    RunNode* runsRoot = nullptr;
+    splitIntoRuns(root, runsRoot);
 
-    root;
 }
 
 Node* sortedMerge(Node* a, Node* b) {
