@@ -67,21 +67,24 @@ int partition(int arr[], int left, int right, int pivotType) {
 
     while (i <= j) {
         while (i <= j && arr[i] <= pivot) {
+            COMPARISONS++;
             i++;
         }
         while (i <= j && arr[j] > pivot) {
+            COMPARISONS++;
             j--;
         }
         if (i < j) {
+            EXCHANGES++;
             swap(arr[i], arr[j]);
         }
     }
-
+    EXCHANGES++;
     swap(arr[left], arr[j]);
     return j;    
 }
 
-void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exchanges) {
+void quickSortPivot1(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
     if (left >= right) {
         return;
     }
@@ -95,12 +98,12 @@ void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exch
 
     if (left < right) {
         int pivotIndex = partition(arr, left, right, 1);
-        quickSortPivot1(arr, left, pivotIndex - 1, comparisons, exchanges);
-        quickSortPivot1(arr, pivotIndex + 1, right, comparisons, exchanges);
+        quickSortPivot1(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot1(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
     }
 }
 
-void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exchanges) {
+void quickSortPivot50(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
     if (left >= right) {
         return;
     }
@@ -115,14 +118,14 @@ void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exc
     int pivotIndex = partition(arr, left, right, 3);
 
     if (pivotIndex - left > 50) {
-        quickSortPivot50(arr, left, pivotIndex - 1, comparisons, exchanges);
+        quickSortPivot50(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
     }
     if (right - pivotIndex > 50) {
-        quickSortPivot50(arr, pivotIndex + 1, right, comparisons, exchanges);
+        quickSortPivot50(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
     }
 }
 
-void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& exchanges) {
+void quickSortPivot100(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
     if (left >= right) {
         return;
     }
@@ -137,14 +140,14 @@ void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& ex
     int pivotIndex = partition(arr, left, right, 3);
 
     if (pivotIndex - left > 100) {
-        quickSortPivot100(arr, left, pivotIndex - 1, comparisons, exchanges);
+        quickSortPivot100(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
     }
     if (right - pivotIndex > 100) {
-        quickSortPivot100(arr, pivotIndex + 1, right, comparisons, exchanges);
+        quickSortPivot100(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
     }
 }
 
-void quickSortPivotMedian(int arr[], int left, int right, int& comparisons, int& exchanges) {
+void quickSortPivotMedian(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
     if (left >= right) {
         return;
     }
