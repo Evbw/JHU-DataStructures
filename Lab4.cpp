@@ -3,12 +3,12 @@
 #include <fstream>
 using namespace std;
 
-int COMPARISONS = 0;
-int EXCHANGES = 0;
-int TOTALCOMPARISONS[5] = {0};
-int TOTALEXCHANGES[5] = {0};
-int GRANDTOTALCOMPARISONS = 0;
-int GRANDTOTALEXCHANGES = 0;
+int comparisons = 0;
+int exchanges = 0;
+int totalComparisons[5] = {0};
+int totalExchanges[5] = {0};
+int grandTotalComparisons = 0;
+int grandTotalExchanges = 0;
 
 void insertionSort(int arr[], int n, int m) {
     int data;
@@ -71,24 +71,24 @@ int partition(int arr[], int left, int right, int pivotType) {
 
     while (i <= j) {
         while (i <= j && arr[i] <= pivot) {
-            COMPARISONS++;
+            comparisons++;
             i++;
         }
         while (i <= j && arr[j] > pivot) {
-            COMPARISONS++;
+            comparisons++;
             j--;
         }
         if (i < j) {
-            EXCHANGES++;
+            exchanges++;
             swap(arr[i], arr[j]);
         }
     }
-    EXCHANGES++;
+    exchanges++;
     swap(arr[left], arr[j]);
     return j;    
 }
 
-void quickSortPivot1(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
+void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -102,12 +102,12 @@ void quickSortPivot1(int arr[], int left, int right, int& COMPARISONS, int& EXCH
 
     if (left < right) {
         int pivotIndex = partition(arr, left, right, 1);
-        quickSortPivot1(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
-        quickSortPivot1(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
+        quickSortPivot1(arr, left, pivotIndex - 1, comparisons, exchanges);
+        quickSortPivot1(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivot50(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
+void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -122,14 +122,14 @@ void quickSortPivot50(int arr[], int left, int right, int& COMPARISONS, int& EXC
     int pivotIndex = partition(arr, left, right, 3);
 
     if (pivotIndex - left > 50) {
-        quickSortPivot50(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot50(arr, left, pivotIndex - 1, comparisons, exchanges);
     }
     if (right - pivotIndex > 50) {
-        quickSortPivot50(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
+        quickSortPivot50(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivot100(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
+void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -144,22 +144,22 @@ void quickSortPivot100(int arr[], int left, int right, int& COMPARISONS, int& EX
     int pivotIndex = partition(arr, left, right, 3);
 
     if (pivotIndex - left > 100) {
-        quickSortPivot100(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot100(arr, left, pivotIndex - 1, comparisons, exchanges);
     }
     if (right - pivotIndex > 100) {
-        quickSortPivot100(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
+        quickSortPivot100(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivotMedian(int arr[], int left, int right, int& COMPARISONS, int& EXCHANGES) {
+void quickSortPivotMedian(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
 
     int pivotIndex = partition(arr, left, right, 4);
 
-    quickSortPivotMedian(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
-    quickSortPivotMedian(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
+    quickSortPivotMedian(arr, left, pivotIndex - 1, comparisons, exchanges);
+    quickSortPivotMedian(arr, pivotIndex + 1, right, comparisons, exchanges);
 }
 
 void swap(int &a, int &b) {
@@ -287,10 +287,6 @@ void mergeSort(Node*& root) {
     root = mergeRuns(runsRoot);
 }
 
-void insert(Node*& head, int data) {
-
-}
-
 int countNumbers(const string& filename) {
     int count = 0;
     char c;
@@ -376,15 +372,74 @@ int main() {
         cin>>outputFilename;
     }
 
-    resultFile<<"File,Sort Method,Comparisons,Exchanges"<<endl;
+    resultFile<<"File,Sort Method,comparisons,exchanges"<<endl;
 
-    int* numbers = readFile(filename, size);
+    for (int i = 0; i < fileCount; i++) {
+        string file = filenames[i];
+        int size = 0;
 
-    if (numbers != nullptr) {
+        int* numbers = readFile(filename, size);
+
+        if (!numbers) {
+            cout<<"Failed to read file: "<<file<<endl;
+            continue;
+        }
+
+        for (int methodIndex = 0; methodIndex < 4; methodIndex++) {
+            comparisons = 0;
+            exchanges = 0;
+            
+            int* data = new int[size];
+            for (int i = 0; i < size; i++) {
+                data[i] = numbers[i];
+            }
+
+            switch(methodIndex + 1) {
+                case 1: {
+                    quickSortPivot1(data, 0, size -1, comparisons, exchanges);
+                    break;
+                }
+                case 2: {
+                    quickSortPivot50(data, 0, size -1, comparisons, exchanges);
+                    break;
+                }
+                case 3: {
+                    quickSortPivot100(data, 0, size -1, comparisons, exchanges);
+                    break;
+                }
+                case 4: {
+                    quickSortPivotMedian(data, 0, size -1, comparisons, exchanges);
+                    break;
+                }
+            }
+
+            totalComparisons[methodIndex] += comparisons;
+            totalExchanges[methodIndex] += exchanges;
+            grandTotalComparisons += comparisons;
+            grandTotalExchanges += exchanges;
+
+            resultFile<<file<<","<<methodIndex<<","<<comparisons<<","<<exchanges<<endl;
+
+            if (size == 50) {
+                string sortedFile = file + " " + to_string(methodIndex) + "_sorted.txt";
+                ofstream sortedOutput(sortedFile);
+                for (int j = 0; j < size; j++) {
+                    sortedOutput<<data[j]<<" ";
+                }
+                sortedOutput.close();
+            }
+
+            delete[] data;
+        }
+
+        delete[] numbers;
+    }
+
+/*    if (numbers != nullptr) {
 
         cout<<endl;
         
-        quickSortPivot1(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot1(numbers, 0, size - 1, Comparisons, exchanges);
         cout<<"Quick Sorted: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -399,7 +454,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivot50(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot50(numbers, 0, size - 1, comparisons, exchanges);
         cout<<"Quick Sort partition size 50: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -414,7 +469,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivot100(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
+        quickSortPivot100(numbers, 0, size - 1, comparisons, exchanges);
         cout<<"Quick Sort partition size 100: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -429,7 +484,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivotMedian(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
+        quickSortPivotMedian(numbers, 0, size - 1, comparisons, exchanges);
         cout<<"Quick Sort median of three: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -456,6 +511,17 @@ int main() {
         current = current->next;
         delete temp;
     }
+*/
+
+    resultFile<<"Summary of Results"<<endl;
+    resultFile<<"Method,Total Comparisons,Total Exchanges"<<endl;
+
+    for (int i = 0; i < 5; i++) {
+        resultFile<<i<<","<<totalComparisons[i]<<totalExchanges[i]<<endl;
+    }
+
+    resultFile<<"Grand Total,"<<grandTotalComparisons<<","<<grandTotalExchanges<<endl;
+    cout<<"Results written to "<<outputFilename<<endl;
 
     return 0;
 }
