@@ -10,7 +10,7 @@ int totalExchanges[5] = {0};
 int grandTotalComparisons = 0;
 int grandTotalExchanges = 0;
 
-void insertionSort(int arr[], int n, int m) {
+void insertionSort(int arr[], int n, int m, int& comparisons, int& exchanges) {
     int data;
     int j;
     for (int i = n + 1; i <= m; i++) {
@@ -18,9 +18,13 @@ void insertionSort(int arr[], int n, int m) {
         j = i - 1;
 
         while (j >= n && arr[j] > data) {
+            comparisons++;
             arr[j + 1] = arr[j];
+            exchanges++;
             j--;
         }
+
+        comparisons++;
         arr[j + 1] = data;
     }
 }
@@ -37,7 +41,7 @@ int partition(int arr[], int left, int right, int pivotType) {
         }
         case 2: {
             if (right - left + 1 <= 100) {
-                insertionSort(arr, left, right);
+                insertionSort(arr, left, right, comparisons, exchanges);
                 return left;
             }
             pivot = arr[left];
@@ -45,7 +49,7 @@ int partition(int arr[], int left, int right, int pivotType) {
         }
         case 3: {
             if (right - left + 1 <= 50) {
-                insertionSort(arr, left, right);
+                insertionSort(arr, left, right, comparisons, exchanges);
                 return left;
             }
             pivot = arr[left];
