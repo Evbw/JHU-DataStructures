@@ -5,6 +5,10 @@ using namespace std;
 
 int COMPARISONS = 0;
 int EXCHANGES = 0;
+int TOTALCOMPARISONS[5] = {0};
+int TOTALEXCHANGES[5] = {0};
+int GRANDTOTALCOMPARISONS = 0;
+int GRANDTOTALEXCHANGES = 0;
 
 void insertionSort(int arr[], int n, int m) {
     int data;
@@ -154,8 +158,8 @@ void quickSortPivotMedian(int arr[], int left, int right, int& COMPARISONS, int&
 
     int pivotIndex = partition(arr, left, right, 4);
 
-    quickSortPivotMedian(arr, left, pivotIndex - 1);
-    quickSortPivotMedian(arr, pivotIndex + 1, right);
+    quickSortPivotMedian(arr, left, pivotIndex - 1, COMPARISONS, EXCHANGES);
+    quickSortPivotMedian(arr, pivotIndex + 1, right, COMPARISONS, EXCHANGES);
 }
 
 void swap(int &a, int &b) {
@@ -380,7 +384,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivot1(numbers, 0, size - 1);
+        quickSortPivot1(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
         cout<<"Quick Sorted: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -395,7 +399,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivot50(numbers, 0, size - 1);
+        quickSortPivot50(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
         cout<<"Quick Sort partition size 50: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -410,7 +414,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivot100(numbers, 0, size - 1);
+        quickSortPivot100(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
         cout<<"Quick Sort partition size 100: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
@@ -425,7 +429,7 @@ int main() {
 
         cout<<endl;
         
-        quickSortPivotMedian(numbers, 0, size - 1);
+        quickSortPivotMedian(numbers, 0, size - 1, COMPARISONS, EXCHANGES);
         cout<<"Quick Sort median of three: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
