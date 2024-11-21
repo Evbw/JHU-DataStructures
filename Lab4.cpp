@@ -417,7 +417,7 @@ int main() {
             continue;
         }
 
-        for (int methodIndex = 0; methodIndex < 4; methodIndex++) {
+        for (int methodIndex = 0; methodIndex < 5; methodIndex++) {
             comparisons = 0;
             exchanges = 0;
             
@@ -441,6 +441,12 @@ int main() {
                 }
                 case 4: {
                     quickSortPivotMedian(data, 0, size -1, comparisons, exchanges);
+                    break;
+                }
+                case 5: {
+                    Node* root = arrayToList(data, size);
+                    mergeSort(root, comparisons, exchanges);
+                    listToArray(root, data, size);
                     break;
                 }
             }
