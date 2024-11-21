@@ -136,7 +136,14 @@ void quickSortPivot100(int arr[], int left, int right) {
 }
 
 void quickSortPivotMedian(int arr[], int left, int right) {
-    
+    if (left >= right) {
+        return;
+    }
+
+    int pivotIndex = partition(arr, left, right, 4);
+
+    quickSortPivotMedian(arr, left, pivotIndex - 1);
+    quickSortPivotMedian(arr, pivotIndex + 1, right);
 }
 
 void swap(int &a, int &b) {
@@ -158,6 +165,40 @@ class RunNode {
         RunNode* next;
         RunNode(Node* root) : runRoot(root), next(nullptr){}
 };
+
+Node* readFileToList(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout<<"Error opening file: "<<filename<<endl;
+        return nullptr;
+    }
+
+    Node* root = nullptr;
+    Node* tail = nullptr;
+
+    int n;
+    while (file >> n) {
+        Node* newNode = new Node(n);
+        if(!root) {
+            root = newNode;
+        } else {
+            tail->next = newNode;
+        }
+        tail = newNode;
+    }
+
+    file.close();
+    return root;
+}
+
+void printList(Node* root) {
+    Node* current = root;
+    while (current) {
+        cout<<current->data<<" ";
+        current = current->next;
+    }
+    cout<<endl;
+}
 
 void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     runsRoot = nullptr;
@@ -186,6 +227,26 @@ void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     }
 }
 
+Node* sortedMerge(Node* a, Node* b) {
+    if (!a) {
+        return b;
+    }
+    if (!b) {
+        return a;
+    }
+
+    Node* result = nullptr;
+
+    if (a->data <= b->data) {
+        result = a;
+        result->next = sortedMerge(a->next, b);
+    } else {
+        result = b;
+        result->next = sortedMerge(a, b->next);
+    }
+    return result;
+}
+
 Node* mergeRuns(RunNode* runsRoot) {
     while (runsRoot && runsRoot->next) {
         RunNode* current = runsRoot;
@@ -208,25 +269,6 @@ void mergeSort(Node*& root) {
     splitIntoRuns(root, runsRoot);
 
     root = mergeRuns(runsRoot);
-}
-
-Node* sortedMerge(Node* a, Node* b) {
-    if (!a) {
-        return b;
-    }
-    if (!b) {
-        return a;
-    }
-
-    Node* result = nullptr;
-
-    if (a->data <= b->data) {
-        result = a;
-        result->next = sortedMerge(a->next, b);
-    } else {
-        result = b;
-        result->next = sortedMerge(a, b->next);
-    }
 }
 
 void insert(Node*& head, int data) {
@@ -312,7 +354,7 @@ int main() {
         cout<<endl;
         
         quickSortPivot1(numbers, 0, size - 1);
-        cout<<"Sorted: "<<endl;
+        cout<<"Quick Sorted: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
         }
@@ -321,5 +363,23 @@ int main() {
     } else {
         cout<<"Reading failed."<<endl;
     }
+
+    Node* root = readFileToList(filename);
+    if (!root) {
+        cout<<"Failed to read file"<<endl;
+        return 1;
+    }
+
+    mergeSort(root);
+    cout<<"Merge Sorted:"<<endl;
+    printList(root);
+
+    Node* current = root;
+    while (current) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
+
     return 0;
 }
