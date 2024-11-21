@@ -243,7 +243,7 @@ void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     }
 }
 
-Node* sortedMerge(Node* a, Node* b) {
+Node* sortedMerge(Node* a, Node* b, int& comparisons, int& exchanges) {
     if (!a) {
         return b;
     }
@@ -253,22 +253,25 @@ Node* sortedMerge(Node* a, Node* b) {
 
     Node* result = nullptr;
 
+    comparisons++;
     if (a->data <= b->data) {
         result = a;
-        result->next = sortedMerge(a->next, b);
+        result->next = sortedMerge(a->next, b, comparisons, exchanges);
     } else {
         result = b;
-        result->next = sortedMerge(a, b->next);
+        result->next = sortedMerge(a, b->next, comparisons, exchanges);
+        exchanges++;
     }
+
     return result;
 }
 
-Node* mergeRuns(RunNode* runsRoot) {
+Node* mergeRuns(RunNode* runsRoot, int& comparisons, int& exchanges) {
     while (runsRoot && runsRoot->next) {
         RunNode* current = runsRoot;
         RunNode* nextRun = runsRoot->next;
 
-        current->runRoot = sortedMerge(current->runRoot, nextRun->runRoot);
+        current->runRoot = sortedMerge(current->runRoot, nextRun->runRoot, comparisons, exchanges);
 
         runsRoot->next = nextRun->next;
         delete nextRun;
@@ -276,7 +279,7 @@ Node* mergeRuns(RunNode* runsRoot) {
     return runsRoot ? runsRoot->runRoot : nullptr;
 }
 
-void mergeSort(Node*& root) {
+void mergeSort(Node*& root, int& comparisons, int& exchanges) {
     if (!root || !root->next) {
         return;
     }
@@ -284,7 +287,36 @@ void mergeSort(Node*& root) {
     RunNode* runsRoot = nullptr;
     splitIntoRuns(root, runsRoot);
 
-    root = mergeRuns(runsRoot);
+    root = mergeRuns(runsRoot, comparisons, exchanges);
+}
+
+Node* arrayToList(int arr[], int size) {
+    Node* root = nullptr;
+    Node* tail = nullptr;
+
+    for (int i = 0; i < size; i++) {
+        Node* newNode = new Node(arr[i]);
+        if (!root) {
+            root = newNode;
+        } else {
+            tail->next = newNode;
+        }
+        tail = newNode;
+    }
+
+    return root;
+}
+
+void listToArray(Node* root, int arr[], int size) {
+    Node* current = root;
+    int index = 0;
+
+    while (current && index < size) {
+        arr[index++] = current->data;
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
 }
 
 int countNumbers(const string& filename) {
