@@ -3,6 +3,9 @@
 #include <fstream>
 using namespace std;
 
+int COMPARISONS = 0;
+int EXCHANGES = 0;
+
 void insertionSort(int arr[], int n, int m) {
     int data;
     int j;
@@ -78,7 +81,7 @@ int partition(int arr[], int left, int right, int pivotType) {
     return j;    
 }
 
-void quickSortPivot1(int arr[], int left, int right) {
+void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -92,12 +95,12 @@ void quickSortPivot1(int arr[], int left, int right) {
 
     if (left < right) {
         int pivotIndex = partition(arr, left, right, 1);
-        quickSortPivot1(arr, left, pivotIndex - 1);
-        quickSortPivot1(arr, pivotIndex + 1, right);
+        quickSortPivot1(arr, left, pivotIndex - 1, comparisons, exchanges);
+        quickSortPivot1(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivot50(int arr[], int left, int right) {
+void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -109,14 +112,17 @@ void quickSortPivot50(int arr[], int left, int right) {
         return;
     }
 
-    if (left < right) {
-        int pivotIndex = partition(arr, left, right, 3);
-        quickSortPivot1(arr, left, pivotIndex - 1);
-        quickSortPivot1(arr, pivotIndex + 1, right);
+    int pivotIndex = partition(arr, left, right, 3);
+
+    if (pivotIndex - left > 50) {
+        quickSortPivot50(arr, left, pivotIndex - 1, comparisons, exchanges);
+    }
+    if (right - pivotIndex > 50) {
+        quickSortPivot50(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivot100(int arr[], int left, int right) {
+void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -128,14 +134,17 @@ void quickSortPivot100(int arr[], int left, int right) {
         return;
     }
 
-    if (left < right) {
-        int pivotIndex = partition(arr, left, right, 4);
-        quickSortPivot1(arr, left, pivotIndex - 1);
-        quickSortPivot1(arr, pivotIndex + 1, right);
+    int pivotIndex = partition(arr, left, right, 3);
+
+    if (pivotIndex - left > 100) {
+        quickSortPivot100(arr, left, pivotIndex - 1, comparisons, exchanges);
+    }
+    if (right - pivotIndex > 100) {
+        quickSortPivot100(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
 
-void quickSortPivotMedian(int arr[], int left, int right) {
+void quickSortPivotMedian(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
     }
@@ -338,23 +347,83 @@ int* readFile(const string& filename, int& size) {
 }
 
 int main() {
+    int maxFiles = 100;                                                         //Arbitrary size for the maximum number of files.
+    string* filenames = new string[maxFiles];                                   //Create an array because of the library restriction.
+    int fileCount = 0;
     int size = 0;
     string filename;
+
     cout<<"This program is intended to compare quick sort and merge sort."<<endl;
-    cout<<"Please enter a file consisting of integers:"<<endl;
-    cin>>filename;
+    cout<<"Please enter the names of the files consisting of integers (type 'done' to finish):"<<endl;
+    while (fileCount < maxFiles && cin>>filename && filename != "done"){
+        filenames[fileCount++] = filename;
+    }
+
+    string outputFilename;
+    cout<<"Enter the name of the output file for the results:"<<endl;
+    cin>>outputFilename;
+
+    ofstream resultFile(outputFilename);
+    while (!resultFile.is_open()) {
+        cout<<"Error opening output file. Please try again"<<endl;
+        cin>>outputFilename;
+    }
+
+    resultFile<<"File,Sort Method,Comparisons,Exchanges"<<endl;
 
     int* numbers = readFile(filename, size);
 
     if (numbers != nullptr) {
 
-        //for (int i = 0; i < size; i++) {
-        //    cout<<numbers[i]<<" ";
-        //}
         cout<<endl;
         
         quickSortPivot1(numbers, 0, size - 1);
         cout<<"Quick Sorted: "<<endl;
+        for (int i = 0; i < size; i++) {
+            cout<<numbers[i]<<" ";
+        }
+        cout<<endl;
+        delete[] numbers;
+    } else {
+        cout<<"Reading failed."<<endl;
+    }
+
+    if (numbers != nullptr) {
+
+        cout<<endl;
+        
+        quickSortPivot50(numbers, 0, size - 1);
+        cout<<"Quick Sort partition size 50: "<<endl;
+        for (int i = 0; i < size; i++) {
+            cout<<numbers[i]<<" ";
+        }
+        cout<<endl;
+        delete[] numbers;
+    } else {
+        cout<<"Reading failed."<<endl;
+    }
+
+    if (numbers != nullptr) {
+
+        cout<<endl;
+        
+        quickSortPivot100(numbers, 0, size - 1);
+        cout<<"Quick Sort partition size 100: "<<endl;
+        for (int i = 0; i < size; i++) {
+            cout<<numbers[i]<<" ";
+        }
+        cout<<endl;
+        delete[] numbers;
+    } else {
+        cout<<"Reading failed."<<endl;
+    }
+
+    if (numbers != nullptr) {
+
+        cout<<endl;
+        
+        quickSortPivotMedian(numbers, 0, size - 1);
+        cout<<"Quick Sort median of three: "<<endl;
         for (int i = 0; i < size; i++) {
             cout<<numbers[i]<<" ";
         }
