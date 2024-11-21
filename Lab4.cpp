@@ -387,6 +387,7 @@ int main() {
     int fileCount = 0;
     int size = 0;
     string filename;
+    string methodNames[] = {"QuickSort", "QSPartition50", "QSPartition100", "QSMedianOfThree", "MergeSort"};
 
     cout<<"This program is intended to compare quick sort and merge sort."<<endl;
     cout<<"Please enter the names of the files consisting of integers (type 'done' to finish):"<<endl;
@@ -397,6 +398,10 @@ int main() {
     string outputFilename;
     cout<<"Enter the name of the output file for the results:"<<endl;
     cin>>outputFilename;
+
+    if (outputFilename.find(".csv") == string::npos) {
+        outputFilename += ".csv";
+    }
 
     ofstream resultFile(outputFilename);
     while (!resultFile.is_open()) {
@@ -410,7 +415,7 @@ int main() {
         string file = filenames[i];
         int size = 0;
 
-        int* numbers = readFile(filename, size);
+        int* numbers = readFile(file, size);
 
         if (!numbers) {
             cout<<"Failed to read file: "<<file<<endl;
@@ -433,7 +438,7 @@ int main() {
                 }
                 case 2: {
                     quickSortPivot50(data, 0, size -1, comparisons, exchanges);
-                    break;
+                    break;  
                 }
                 case 3: {
                     quickSortPivot100(data, 0, size -1, comparisons, exchanges);
@@ -456,10 +461,10 @@ int main() {
             grandTotalComparisons += comparisons;
             grandTotalExchanges += exchanges;
 
-            resultFile<<file<<","<<methodIndex<<","<<comparisons<<","<<exchanges<<endl;
+            resultFile<<file<<","<<methodNames[methodIndex]<<","<<comparisons<<","<<exchanges<<endl;
 
             if (size == 50) {
-                string sortedFile = file + " " + to_string(methodIndex) + "_sorted.txt";
+                string sortedFile = file + " " + methodNames[methodIndex] + "_sorted.txt";
                 ofstream sortedOutput(sortedFile);
                 for (int j = 0; j < size; j++) {
                     sortedOutput<<data[j]<<" ";
@@ -473,92 +478,14 @@ int main() {
         delete[] numbers;
     }
 
-/*    if (numbers != nullptr) {
-
-        cout<<endl;
-        
-        quickSortPivot1(numbers, 0, size - 1, Comparisons, exchanges);
-        cout<<"Quick Sorted: "<<endl;
-        for (int i = 0; i < size; i++) {
-            cout<<numbers[i]<<" ";
-        }
-        cout<<endl;
-        delete[] numbers;
-    } else {
-        cout<<"Reading failed."<<endl;
-    }
-
-    if (numbers != nullptr) {
-
-        cout<<endl;
-        
-        quickSortPivot50(numbers, 0, size - 1, comparisons, exchanges);
-        cout<<"Quick Sort partition size 50: "<<endl;
-        for (int i = 0; i < size; i++) {
-            cout<<numbers[i]<<" ";
-        }
-        cout<<endl;
-        delete[] numbers;
-    } else {
-        cout<<"Reading failed."<<endl;
-    }
-
-    if (numbers != nullptr) {
-
-        cout<<endl;
-        
-        quickSortPivot100(numbers, 0, size - 1, comparisons, exchanges);
-        cout<<"Quick Sort partition size 100: "<<endl;
-        for (int i = 0; i < size; i++) {
-            cout<<numbers[i]<<" ";
-        }
-        cout<<endl;
-        delete[] numbers;
-    } else {
-        cout<<"Reading failed."<<endl;
-    }
-
-    if (numbers != nullptr) {
-
-        cout<<endl;
-        
-        quickSortPivotMedian(numbers, 0, size - 1, comparisons, exchanges);
-        cout<<"Quick Sort median of three: "<<endl;
-        for (int i = 0; i < size; i++) {
-            cout<<numbers[i]<<" ";
-        }
-        cout<<endl;
-        delete[] numbers;
-    } else {
-        cout<<"Reading failed."<<endl;
-    }
-
-    Node* root = readFileToList(filename);
-    if (!root) {
-        cout<<"Failed to read file"<<endl;
-        return 1;
-    }
-
-    mergeSort(root);
-    cout<<"Merge Sorted:"<<endl;
-    printList(root);
-
-    Node* current = root;
-    while (current) {
-        Node* temp = current;
-        current = current->next;
-        delete temp;
-    }
-*/
-
-    resultFile<<"Summary of Results"<<endl;
-    resultFile<<"Method,Total Comparisons,Total Exchanges"<<endl;
+    resultFile<<endl<<"Summary of Results"<<endl;
+    resultFile<<","<<"Method,Total Comparisons,Total Exchanges"<<endl;
 
     for (int i = 0; i < 5; i++) {
-        resultFile<<i<<","<<totalComparisons[i]<<totalExchanges[i]<<endl;
+        resultFile<<","<<methodNames[i]<<","<<totalComparisons[i]<<totalExchanges[i]<<endl;
     }
 
-    resultFile<<"Grand Total,"<<grandTotalComparisons<<","<<grandTotalExchanges<<endl;
+    resultFile<<","<<"Grand Total,"<<grandTotalComparisons<<","<<grandTotalExchanges<<endl;
     cout<<"Results written to "<<outputFilename<<endl;
 
     return 0;
