@@ -486,11 +486,18 @@ int main() {
     resultFile<<","<<"Method,Total Comparisons,Total Exchanges"<<endl;
 
     for (int i = 0; i < 5; i++) {
-        resultFile<<","<<methodNames[i]<<","<<totalComparisons[i]<<totalExchanges[i]<<endl;
+        resultFile<<","<<methodNames[i]<<","<<totalComparisons[i]<<","<<totalExchanges[i]<<endl;
     }
 
     resultFile<<","<<"Grand Total,"<<grandTotalComparisons<<","<<grandTotalExchanges<<endl;
     cout<<"Results written to "<<outputFilename<<endl;
+
+    cout<<endl<<"Summary of Results"<<endl;
+    cout<<"Method"<<"\t\tTotal Comparisons"<<"\tTotal Exchanges"<<endl;
+    for (int i = 0; i < 5; i++) {
+        cout<<methodNames[i]<<"\t"<<totalComparisons[i]<<"\t\t\t"<<totalExchanges[i]<<endl;
+    }
+    cout<<"Grand Total"<<"\t"<<grandTotalComparisons<<"\t\t\t"<<grandTotalExchanges<<endl;
 
     return 0;
 }
