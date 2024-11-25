@@ -10,6 +10,18 @@ int totalExchanges[5] = {0};
 int grandTotalComparisons = 0;
 int grandTotalExchanges = 0;
 
+/*  ----------------------------------------------------------
+    Function: insertionSort
+    Description: Performs an insertion sort on a subarray within the range [n,m] of the input array
+    Parameters:
+        - arr (int[]): Array to be sorted.
+        - n (int): Starting index of the subarray.
+        - m (int): Ending index of the subarray.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
+
 void insertionSort(int arr[], int n, int m, int& comparisons, int& exchanges) {
     int data;
     int j;
@@ -28,6 +40,22 @@ void insertionSort(int arr[], int n, int m, int& comparisons, int& exchanges) {
         arr[j + 1] = data;
     }
 }
+
+/*  ----------------------------------------------------------
+    Function: partition
+    Description: Partitions the array into two halves based on a pivot values and organizes elements around it.
+    Parameters:
+        - arr (int[]): Array to partition.
+        - left (int): Starting index of the array.
+        - right (int): Ending index of the array.
+        - pivotType (int): Determines the pivot selection strategy.
+                1 - First element.
+                2/3 - Use insertion sort for smaller subarrays.
+                4 - Median-of-three
+    Returns:
+        - (int): Final pivot position after partitioning.
+    ----------------------------------------------------------
+*/
 
 int partition(int arr[], int left, int right, int pivotType) {
     int pivot;
@@ -92,6 +120,18 @@ int partition(int arr[], int left, int right, int pivotType) {
     return j;    
 }
 
+/*  ----------------------------------------------------------
+    Function: quickSortPivot1
+    Description: Uses first element of the array as the pivot to implement QuickSort
+    Parameters:
+        - arr (int[]): Array to be sorted.
+        - left (int): Starting index of the array.
+        - right (int): Ending index of the array.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
+
 void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
@@ -110,6 +150,18 @@ void quickSortPivot1(int arr[], int left, int right, int& comparisons, int& exch
         quickSortPivot1(arr, pivotIndex + 1, right, comparisons, exchanges);
     }
 }
+
+/*  ----------------------------------------------------------
+    Function: quickSortPivot50
+    Description: Uses a hybrid approach using QuickSort, but implementing InsertionSort on partitions less than 50 elements.
+    Parameters:
+        - arr (int[]): Array to be sorted.
+        - left (int): Starting index of the array.
+        - right (int): Ending index of the array.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
 
 void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
@@ -133,6 +185,18 @@ void quickSortPivot50(int arr[], int left, int right, int& comparisons, int& exc
     }
 }
 
+/*  ----------------------------------------------------------
+    Function: quickSortPivot100
+    Description: Uses a hybrid approach using QuickSort, but implementing InsertionSort on partitions less than 100 elements.
+    Parameters:
+        - arr (int[]): Array to be sorted.
+        - left (int): Starting index of the array.
+        - right (int): Ending index of the array.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
+
 void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
@@ -155,6 +219,18 @@ void quickSortPivot100(int arr[], int left, int right, int& comparisons, int& ex
     }
 }
 
+/*  ----------------------------------------------------------
+    Function: quickSortPivot50
+    Description: Uses a median-of-three method for QuickSort pivot selection.
+    Parameters:
+        - arr (int[]): Array to be sorted.
+        - left (int): Starting index of the array.
+        - right (int): Ending index of the array.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
+
 void quickSortPivotMedian(int arr[], int left, int right, int& comparisons, int& exchanges) {
     if (left >= right) {
         return;
@@ -166,11 +242,31 @@ void quickSortPivotMedian(int arr[], int left, int right, int& comparisons, int&
     quickSortPivotMedian(arr, pivotIndex + 1, right, comparisons, exchanges);
 }
 
+/*  ----------------------------------------------------------
+    Function: Swap
+    Description: Swaps the values of two integers.
+    Parameters:
+        - a (int&): Reference to the first integer.
+        - b (int&): Reference to the second integer.
+    ----------------------------------------------------------
+*/
+
 void swap(int &a, int &b) {
     int temp = a;
     a = b;
     b = temp;
 }
+
+/*  ----------------------------------------------------------
+    Class: Node
+    Description: Represents a node in the tree.
+    Members:
+        - data (int): The integer in the tree to be sorted.
+        - next (Node*): Pointer to the next node in the list.
+    Constructors:
+        - Node(int val): Initializes a node with an integer.
+    ----------------------------------------------------------
+*/
 
 class Node {
     public:
@@ -179,12 +275,33 @@ class Node {
         Node(int val) : data(val), next(nullptr){}
 };
 
+/*  ----------------------------------------------------------
+    Class: RunNode
+    Description: Represents a node in the tree that is part of a sorted sub-sequence.
+    Members:
+        - runRoot (Node&): The head node in the sequence of sorted integers.
+        - next (RunNode*): Pointer to the next node in the list.
+    Constructors:
+        - RunNode(Node* root): Initializes a node as the head of a run.
+    ----------------------------------------------------------
+*/
+
 class RunNode {
     public:
         Node* runRoot;
         RunNode* next;
         RunNode(Node* root) : runRoot(root), next(nullptr){}
 };
+
+/*  ----------------------------------------------------------
+    Function: readFileToList
+    Description: Reads integers from a file and creates linked list from them.
+    Parameters:
+        - filename (string): Name of the file to read.
+    Returns:
+        - (Node*): Pointer to the head of the linked list.
+    ----------------------------------------------------------
+*/
 
 Node* readFileToList(const string& filename) {
     ifstream file(filename);
@@ -211,14 +328,14 @@ Node* readFileToList(const string& filename) {
     return root;
 }
 
-void printList(Node* root) {
-    Node* current = root;
-    while (current) {
-        cout<<current->data<<" ";
-        current = current->next;
-    }
-    cout<<endl;
-}
+/*  ----------------------------------------------------------
+    Function: splitIntoRuns
+    Description: Splits a linked list into monotonic runs.
+    Parameters:
+        - root (Node*): Pointer to the head of the input list.
+        - runsRoot (RunNode*&): Reference to the head of the runs.
+    ----------------------------------------------------------
+*/
 
 void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     runsRoot = nullptr;
@@ -247,6 +364,19 @@ void splitIntoRuns(Node* root, RunNode*& runsRoot) {
     }
 }
 
+/*  ----------------------------------------------------------
+    Function: sortedMerge
+    Description: Merges two sorted linked lists into a single sorted linked list.
+    Parameters:
+        - a (Node*): Reference to the first list.
+        - b (Node*): Reference to the second list.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    Returns:
+        - (Node*): Pointer to the head of the merged list.
+    ----------------------------------------------------------
+*/
+
 Node* sortedMerge(Node* a, Node* b, int& comparisons, int& exchanges) {
     if (!a) {
         return b;
@@ -270,6 +400,18 @@ Node* sortedMerge(Node* a, Node* b, int& comparisons, int& exchanges) {
     return result;
 }
 
+/*  ----------------------------------------------------------
+    Function: mergeRuns
+    Description: Merges runs from the RunNode linked list into a single list.
+    Parameters:
+        - runsRoot (RunNode*): Pointer to the head of the runs list.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    Returns:
+        - (Node*): Pointer to the head of the merged list.
+    ----------------------------------------------------------
+*/
+
 Node* mergeRuns(RunNode* runsRoot, int& comparisons, int& exchanges) {
     while (runsRoot && runsRoot->next) {
         RunNode* current = runsRoot;
@@ -283,6 +425,16 @@ Node* mergeRuns(RunNode* runsRoot, int& comparisons, int& exchanges) {
     return runsRoot ? runsRoot->runRoot : nullptr;
 }
 
+/*  ----------------------------------------------------------
+    Function: mergeSort
+    Description: Sorts a linked list using merge sort.
+    Parameters:
+        - root (Node*&): Reference to the head of the list.
+        - comparisons (int&): Reference to the counter for comparisons.
+        - exchanges (int&): Reference to the counter for exchanges.
+    ----------------------------------------------------------
+*/
+
 void mergeSort(Node*& root, int& comparisons, int& exchanges) {
     if (!root || !root->next) {
         return;
@@ -293,6 +445,17 @@ void mergeSort(Node*& root, int& comparisons, int& exchanges) {
 
     root = mergeRuns(runsRoot, comparisons, exchanges);
 }
+
+/*  ----------------------------------------------------------
+    Function: arrayToList
+    Description: Converts an array of integers into a linked list.
+    Parameters:
+        - arr (int[]): Array of integers.
+        - size (int): Size of the array.
+    Returns:
+        - (Node*): Pointer to the head of the new list.
+    ----------------------------------------------------------
+*/
 
 Node* arrayToList(int arr[], int size) {
     Node* root = nullptr;
@@ -311,6 +474,16 @@ Node* arrayToList(int arr[], int size) {
     return root;
 }
 
+/*  ----------------------------------------------------------
+    Function: listToArray
+    Description: Converts a linked list into an array and deallocates the list.
+    Parameters:
+        - root (Node*): Pointer to the head of the list.
+        - arr (int[]): Array to store the list elements.
+        - size (int): Size of the array.
+    ----------------------------------------------------------
+*/
+
 void listToArray(Node* root, int arr[], int size) {
     Node* current = root;
     int index = 0;
@@ -322,6 +495,16 @@ void listToArray(Node* root, int arr[], int size) {
         delete temp;
     }
 }
+
+/*  ----------------------------------------------------------
+    Function: countNumbers
+    Description: Counts the number of values in a file.
+    Parameters:
+        - filename (string): Name of the file to read.
+    Returns:
+        - count (int): Total count of numbers in the file.
+    ----------------------------------------------------------
+*/
 
 int countNumbers(const string& filename) {
     int count = 0;
@@ -351,6 +534,17 @@ int countNumbers(const string& filename) {
     return count;
 }
 
+/*  ----------------------------------------------------------
+    Function: readFile
+    Description: Reads integers from a file into an array.
+    Parameters:
+        - filename (string): Name of the file to read.
+        - size (int&): Reference to the size of the array.
+    Returns:
+        - numbers (int*): Pointer to the array containing the numbers.
+    ----------------------------------------------------------
+*/
+
 int* readFile(const string& filename, int& size) {
     size = countNumbers(filename);
     if (size == 0) {
@@ -364,7 +558,7 @@ int* readFile(const string& filename, int& size) {
         delete[] numbers;
         return nullptr;
     }
-    
+
     int index = 0;
     string currentNumber = "";
     char c;
@@ -385,6 +579,12 @@ int* readFile(const string& filename, int& size) {
     return numbers;
 }
 
+/*  ----------------------------------------------------------
+    Function: main
+    Description: Entry point for the program. Handles input, sorts files, and writes to an output file.
+    ----------------------------------------------------------
+*/
+
 int main() {
     int maxFiles = 100;                                                         //Arbitrary size for the maximum number of files.
     string* filenames = new string[maxFiles];                                   //Create an array because of the library restriction.
@@ -398,10 +598,10 @@ int main() {
     while (fileCount < maxFiles && cin>>filename && filename != "done"){
         filenames[fileCount++] = filename;
     }
-
+    cin.ignore();
     string outputFilename;
     cout<<"Enter the name of the output file for the results:"<<endl;
-    cin>>outputFilename;
+    getline(cin,outputFilename);
 
     if (outputFilename.find(".csv") == string::npos) {
         outputFilename += ".csv";
@@ -466,8 +666,8 @@ int main() {
             grandTotalExchanges += exchanges;
 
             resultFile<<file<<","<<methodNames[methodIndex]<<","<<comparisons<<","<<exchanges<<endl;
-
-            if (size == 50) {
+            
+            if (size == 50 || size == 51) {
                 string sortedFile = file + " " + methodNames[methodIndex] + "_sorted.txt";
                 ofstream sortedOutput(sortedFile);
                 for (int j = 0; j < size; j++) {
